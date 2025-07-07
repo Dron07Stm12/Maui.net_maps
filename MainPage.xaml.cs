@@ -102,6 +102,8 @@ namespace MauiGpsDemo
 
 
 
+
+
         private async Task SendLocationToFirebase(double latitude, double longitude)
         {
             var firebase = new FirebaseClient(firebaseUrl);
