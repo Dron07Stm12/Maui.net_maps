@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Maps;
 
+
+
 namespace MauiGpsDemo
 {
     public static class MauiProgram
@@ -24,6 +26,10 @@ namespace MauiGpsDemo
             builder.Services.AddSingleton<MainPage>();  
 
             builder.UseMauiMaps(); // Регистрация карт в приложении 
+
+          
+
+
 
             return builder.Build();
         }

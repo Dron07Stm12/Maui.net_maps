@@ -5,21 +5,38 @@
              x:Class="MauiGpsDemo.MainPage">
 
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-           
+        <VerticalStackLayout Padding="30,0" Spacing="25">
 
-            <Button Text="Показать координаты" Clicked="OnGetLocationClicked"/>
-            
-            <maps:Map x:Name="MyMap"
-                  HeightRequest="300"
-                  WidthRequest="300"/>
-            
-            <Label x:Name="LocationLabel"
-               Text="Нажмите кнопку для получения координат."
-               FontSize="16"
-               HorizontalOptions="Center"/>
+            <Label Text="Выберите режим:" FontSize="18" HorizontalOptions="Center" />
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="DarkOliveGreen" TextColor="White" />
+                <Button Text="Родитель" Clicked="OnParentModeClicked" BackgroundColor="DarkBlue" TextColor="White" />
+            </HorizontalStackLayout>
+
+            <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15">
+                <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="18" HorizontalOptions="Center"/>
+                <Label Text="Введите имя/код ребёнка:"/>
+                <Entry x:Name="ChildIdEntry" Placeholder="child1" Text="child1"/>
+                <Label x:Name="ChildLocationLabel" Text="Ожидание отправки координат..." HorizontalOptions="Center"/>
+                <Button Text="Получить координаты" Clicked="OnGetLocationClicked" HorizontalOptions="Center"/>
+            </StackLayout>
+
+            <StackLayout x:Name="ParentPanel" IsVisible="False" Spacing="15">
+                <Label Text="Режим Родителя" FontAttributes="Bold" FontSize="18" HorizontalOptions="Center"/>
+                <!--<Label Text="Имя/код ребёнка для отслеживания:"/>-->
+                <!--<Entry x:Name="ParentIdEntry" Placeholder="Введите имя/код ребёнка" PlaceholderColor="Khaki"  />-->
+                <Entry x:Name="ParentIdEntry" Placeholder="child1" Text="child1"/>
+                <HorizontalStackLayout  HorizontalOptions="Center"  >
+                    <Button Text="Ребенок" Clicked="OnTrackChildClicked" BackgroundColor="#7C1C1C"  TextColor="White"/>
+                    <Button Text="Режим карты" Clicked="OnSatelliteClicked" BackgroundColor="#4F4949" TextColor="White"/>
+                    <Button Text="След" Clicked="OnShowPointsClicked" BackgroundColor="#7C1C1C" TextColor="White"/>
+                    <!--<Button Text="Гибрид" Clicked="OnHybridClicked"/>-->
+                </HorizontalStackLayout>
+
+                <!--<Button Text="Показать на карте" Clicked="OnTrackChildClicked"/>-->
+                <maps:Map x:Name="MyMap" HeightRequest="300" WidthRequest="300"/>
+                <Label x:Name="ParentLocationLabel" Text="Местоположение не получено." HorizontalOptions="Center"/>
+            </StackLayout>
 
         </VerticalStackLayout>
     </ScrollView>
