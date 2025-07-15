@@ -1,4 +1,4 @@
-﻿
+﻿using Firebase.Auth; // <-- В начало файла
 using Microsoft.Maui.Controls.Maps;    // Для карт  
 using Microsoft.Maui.Devices.Sensors;  // Для Geolocation
 using Microsoft.Maui.Maps;
@@ -44,8 +44,8 @@ namespace MauiGpsDemo
             ////////////////////////////
             //  Подписка на изменение текста в ParentIdEntry ===
             ParentIdEntry.TextChanged += ParentIdEntry_TextChanged;// Подписка: если родитель меняет ID ребёнка — срабатывает debounce-логика.
-                                                                   /////////////////////////////
-            ///
+                                                                  
+          
             //  подписка на изменение текста в ChildIdEntry
             ChildIdEntry.TextChanged += ChildIdEntry_TextChanged;
 
@@ -331,11 +331,9 @@ namespace MauiGpsDemo
         {
             double lat = Preferences.Default.Get("ParentLastLat", 0.0);
             double lng = Preferences.Default.Get("ParentLastLng", 0.0);
-            string time = Preferences.Default.Get("ParentLastTime", "нет данных");
-            ////////////////////////////////////////////////////////////////////////
+            string time = Preferences.Default.Get("ParentLastTime", "нет данных");         
             int battery = Preferences.Default.Get("ParentLastBattery", -1);
-            /////////////////////////////////////////////////////////////////
-
+          
             var position = new Location(lat, lng);
 
             // Добавляем точку в историю, если новая
@@ -1026,6 +1024,32 @@ namespace MauiGpsDemo
 //        await DisplayAlert("Ошибка", ex.Message, "OK");
 //    }
 //}
+
+
+
+
+//// Import the functions you need from the SDKs you need
+//import { initializeApp } from "firebase/app";
+//import { getAnalytics } from "firebase/analytics";
+//// TODO: Add SDKs for Firebase products that you want to use
+//// https://firebase.google.com/docs/web/setup#available-libraries
+
+//// Your web app's Firebase configuration
+//// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+//const firebaseConfig = {
+//  apiKey: "AIzaSyC0c8YE0hiprN2emwRVq-QvE2hvZ_K--58",
+//  authDomain: "gpsdemo-5820b.firebaseapp.com",
+//  databaseURL: "https://gpsdemo-5820b-default-rtdb.firebaseio.com",
+//  projectId: "gpsdemo-5820b",
+//  storageBucket: "gpsdemo-5820b.firebasestorage.app",
+//  messagingSenderId: "1086587655298",
+//  appId: "1:1086587655298:web:f5ebff0076be3bf19b909b",
+//  measurementId: "G-PDNRPCNZB5"
+//};
+
+//// Initialize Firebase
+//const app = initializeApp(firebaseConfig);
+//const analytics = getAnalytics(app);
 
 
 
