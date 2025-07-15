@@ -101,31 +101,89 @@ namespace MauiGpsDemo.Platforms.Android
             return StartCommandResult.Sticky;
         }
 
+        //public void OnLocationChanged(Location location)
+        //{
+        //    string childId = Preferences.Default.Get("CurrentChildId", "child1");
+
+        //    ///////////////////////////////////////
+        //    // Получение уровня батареи
+        //    var batteryIntent = RegisterReceiver(null, new IntentFilter(Intent.ActionBatteryChanged));
+        //    int level = batteryIntent.GetIntExtra(BatteryManager.ExtraLevel, -1);
+        //    int scale = batteryIntent.GetIntExtra(BatteryManager.ExtraScale, -1);
+        //    int batteryPct = (int)(level * 100 / (float)scale);
+
+
+
+        //    /////////////////////////////////////////
+
+        //    // Сохраняем координаты локально
+        //    Preferences.Default.Set("LastLat", location.Latitude);
+        //    Preferences.Default.Set("LastLng", location.Longitude);
+        //    Preferences.Default.Set("LastTime", DateTime.UtcNow.ToString("o"));
+        //    //////////////////////////////////////////////////////
+        //    Preferences.Default.Set("LastBattery", batteryPct);
+        //    //////////////////////////////////////////////////
+
+
+        //    _ = System.Threading.Tasks.Task.Run(async () =>
+        //    {
+        //        await firebase
+        //            .Child("locations")
+        //            .Child(childId)
+        //            .PutAsync(new
+        //            {
+        //                lat = location.Latitude,
+        //                lng = location.Longitude,
+        //                time = DateTime.UtcNow.ToString("o"),
+        //                battery = batteryPct                            // Добавляем уровень батареи в данные
+        //            });
+        //    });
+        //}
+
         public void OnLocationChanged(Location location)
         {
             string childId = Preferences.Default.Get("CurrentChildId", "child1");
+
+            // Получение уровня батареи
+            var batteryIntent = RegisterReceiver(null, new IntentFilter(Intent.ActionBatteryChanged));
+            int batteryPct = -1;
+            if (batteryIntent != null)
+            {
+                int level = batteryIntent.GetIntExtra(BatteryManager.ExtraLevel, -1);
+                int scale = batteryIntent.GetIntExtra(BatteryManager.ExtraScale, -1);
+                if (level >= 0 && scale > 0)
+                    batteryPct = (int)(level * 100f / scale);
+            }
 
             // Сохраняем координаты локально
             Preferences.Default.Set("LastLat", location.Latitude);
             Preferences.Default.Set("LastLng", location.Longitude);
             Preferences.Default.Set("LastTime", DateTime.UtcNow.ToString("o"));
+            if (batteryPct >= 0 && batteryPct <= 100)
+                Preferences.Default.Set("LastBattery", batteryPct);
 
-
-
+            // Формируем объект для Firebase
+            var data = new Dictionary<string, object>
+            {
+                ["lat"] = location.Latitude,
+                ["lng"] = location.Longitude,
+                ["time"] = DateTime.UtcNow.ToString("o")
+            };
+            if (batteryPct >= 0 && batteryPct <= 100)
+                data["battery"] = batteryPct;
 
             _ = System.Threading.Tasks.Task.Run(async () =>
             {
                 await firebase
                     .Child("locations")
                     .Child(childId)
-                    .PutAsync(new
-                    {
-                        lat = location.Latitude,
-                        lng = location.Longitude,
-                        time = DateTime.UtcNow.ToString("o")
-                    });
+                    .PutAsync(data);
             });
         }
+
+
+
+
 
         public void OnProviderDisabled(string provider) { }
         public void OnProviderEnabled(string provider) { }

@@ -2,27 +2,30 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
-             x:Class="MauiGpsDemo.MainPage">
+             x:Class="MauiGpsDemo.MainPage"
+             BackgroundColor="#5C5C79"
+                Shell.NavBarIsVisible="False"
+             >
 
     <ScrollView>
         <VerticalStackLayout Padding="30,0" Spacing="25">
 
-            <Label Text="Выберите режим:" FontSize="18" HorizontalOptions="Center" />
+            <Label Text="Выберите режим" FontSize="18" HorizontalOptions="Center" FontAttributes="Bold" Margin="0,10,0,0"   />
             <HorizontalStackLayout HorizontalOptions="Center">
                 <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="DarkOliveGreen" TextColor="White" />
                 <Button Text="Родитель" Clicked="OnParentModeClicked" BackgroundColor="DarkBlue" TextColor="White" />
             </HorizontalStackLayout>
 
-            <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15">
-                <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="18" HorizontalOptions="Center"/>
+            <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15"   >
+                <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#16A716"/>
                 <Label Text="Введите имя/код ребёнка:"/>
                 <Entry x:Name="ChildIdEntry" Placeholder="child1" Text="child1"/>
                 <Label x:Name="ChildLocationLabel" Text="Ожидание отправки координат..." HorizontalOptions="Center"/>
-                <Button Text="Получить координаты" Clicked="OnGetLocationClicked" HorizontalOptions="Center"/>
+                <Button Text="Получить координаты" Clicked="OnGetLocationClicked" HorizontalOptions="Center" BackgroundColor="#183849" TextColor="White"/>
             </StackLayout>
 
-            <StackLayout x:Name="ParentPanel" IsVisible="False" Spacing="15">
-                <Label Text="Режим Родителя" FontAttributes="Bold" FontSize="18" HorizontalOptions="Center"/>
+            <StackLayout x:Name="ParentPanel" IsVisible="False" Spacing="15"   >
+                <Label Text="Режим Родителя" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="DarkBlue"/>
                 <!--<Label Text="Имя/код ребёнка для отслеживания:"/>-->
                 <!--<Entry x:Name="ParentIdEntry" Placeholder="Введите имя/код ребёнка" PlaceholderColor="Khaki"  />-->
                 <Entry x:Name="ParentIdEntry" Placeholder="child1" Text="child1"/>
@@ -34,8 +37,9 @@
                 </HorizontalStackLayout>
 
                 <!--<Button Text="Показать на карте" Clicked="OnTrackChildClicked"/>-->
-                <maps:Map x:Name="MyMap" HeightRequest="300" WidthRequest="300"/>
+                <maps:Map x:Name="MyMap" HeightRequest="300" HorizontalOptions="Fill"/>
                 <Label x:Name="ParentLocationLabel" Text="Местоположение не получено." HorizontalOptions="Center"/>
+                <Label x:Name="ParentBatteryLabel" Text="Батарея: -" HorizontalOptions="Center"  FontAttributes="Bold" FontSize="18" TextColor="#0D250D"/>
             </StackLayout>
 
         </VerticalStackLayout>

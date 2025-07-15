@@ -1,4 +1,5 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 
@@ -13,7 +14,7 @@ namespace MauiGpsDemo
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
+          
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
                 var channel = new NotificationChannel("location_channel", "Location", NotificationImportance.Default)

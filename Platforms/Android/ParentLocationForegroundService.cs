@@ -52,7 +52,7 @@ namespace MauiGpsDemo.Platforms.Android
 
             StartForeground(2, notification);
 
-            pollingTimer = new Timer(5000); // 5 секунд
+            pollingTimer = new Timer(10000); // 5 секунд
             pollingTimer.Elapsed += PollingTimer_Elapsed;
             pollingTimer.Start();
 
@@ -75,6 +75,7 @@ namespace MauiGpsDemo.Platforms.Android
                     Preferences.Default.Set("ParentLastLat", loc.lat);
                     Preferences.Default.Set("ParentLastLng", loc.lng);
                     Preferences.Default.Set("ParentLastTime", loc.time ?? DateTime.UtcNow.ToString("o"));
+                    Preferences.Default.Set("ParentLastBattery", loc.battery); // добавлено 
                 }
             }
             catch { /* Можно добавить логирование */ }
@@ -92,6 +93,8 @@ namespace MauiGpsDemo.Platforms.Android
             public double lat { get; set; }
             public double lng { get; set; }
             public string time { get; set; }
+
+            public int battery { get; set; } // добавлено
         }
 
 

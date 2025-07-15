@@ -1,19 +1,19 @@
-﻿using Firebase.Database;
-using Firebase.Database.Query;
-                                                                                                                                                                                                                                        using Microsoft.Maui;                  // Базовые типы
-using Microsoft.Maui.ApplicationModel; // Для PermissionStatus
-using Microsoft.Maui.Controls;
+﻿
 using Microsoft.Maui.Controls.Maps;    // Для карт  
 using Microsoft.Maui.Devices.Sensors;  // Для Geolocation
 using Microsoft.Maui.Maps;
 using System;
 using System.Timers;
 using System.Threading.Tasks;
-
-#if ANDROID
-using Android.Content;
-using MauiGpsDemo.Platforms.Android;
-#endif
+using Firebase.Database;
+using Firebase.Database.Query;
+using Microsoft.Maui;                  // Базовые типы
+using Microsoft.Maui.ApplicationModel; // Для PermissionStatus
+using Microsoft.Maui.Controls;
+   #if ANDROID
+   using Android.Content;
+   using MauiGpsDemo.Platforms.Android;
+  #endif
 namespace MauiGpsDemo
 {
     public partial class MainPage : ContentPage
@@ -31,6 +31,12 @@ namespace MauiGpsDemo
         private System.Timers.Timer _parentUpdateTimer;
         // Таймер для debounce (отложенного реагирования на ввод в ParentIdEntry).
         private System.Timers.Timer _debounceTimer;
+
+
+        // === Новый обработчик для ChildIdEntry ===
+        private System.Timers.Timer _childDebounceTimer; // отдельный debounce-таймер для ребёнка
+
+
         public MainPage()
         {
             InitializeComponent();// MAUI инициализация разметки и элементов.
@@ -38,8 +44,42 @@ namespace MauiGpsDemo
             ////////////////////////////
             //  Подписка на изменение текста в ParentIdEntry ===
             ParentIdEntry.TextChanged += ParentIdEntry_TextChanged;// Подписка: если родитель меняет ID ребёнка — срабатывает debounce-логика.
-            /////////////////////////////
+                                                                   /////////////////////////////
+            ///
+            //  подписка на изменение текста в ChildIdEntry
+            ChildIdEntry.TextChanged += ChildIdEntry_TextChanged;
+
+
         }
+
+
+        private void ChildIdEntry_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Сбрасываем старый debounce-таймер
+            _childDebounceTimer?.Stop();
+            _childDebounceTimer?.Dispose();
+
+            _childDebounceTimer = new System.Timers.Timer(800);
+            _childDebounceTimer.AutoReset = false;
+            _childDebounceTimer.Elapsed += (s, ev) =>
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    if (ChildPanel.IsVisible) // Только если панель ребёнка активна
+                    {
+                        var childId = ChildIdEntry.Text?.Trim() ?? "child1";
+#if ANDROID
+                        StopChildLocationService();
+                        StartChildLocationService(childId);
+#endif
+                    }
+                });
+            };
+            _childDebounceTimer.Start();
+        }
+
+
+
 
 
 
@@ -73,28 +113,34 @@ namespace MauiGpsDemo
 
 
 
-       
-        private void ParentIdEntry_TextChanged(object sender, TextChangedEventArgs e)// // Метод-обработчик, вызывается каждый раз, когда изменяется                                                                                    // текстовое поле ParentIdEntry (то есть пользователь меняет ID ребёнка в режиме родителя).
+        //
+        /// <summary>
+        ///  Метод-обработчик, вызывается каждый раз, когда изменяется текстовое поле ParentIdEntry (то есть пользователь меняет ID ребёнка в режиме родителя).
+
+        private void ParentIdEntry_TextChanged(object sender, TextChangedEventArgs e)                                                                             
         {
             // Сбрасываем старый debounce-таймер
             _debounceTimer?.Stop();
             _debounceTimer?.Dispose();
 
-            // Запускаем новый debounce-таймер (например, 800 мс)
+            //  создаётся экземпляр таймера (_debounceTimer), который настроен на срабатывание через 800 миллисекунд.
             _debounceTimer = new System.Timers.Timer(800);
             //таймер сработает только один раз (не будет зацикливаться).
             _debounceTimer.AutoReset = false;
-
+            //Подписывается на событие Elapsed (срабатывает, когда таймер истечёт).
             _debounceTimer.Elapsed += (s, ev) =>
             {
+                // Этот код выполнится через 800 мс после последнего изменения текста в ParentIdEntry.
+                // Используем MainThread для обновления UI, так как таймер работает в фоновом потоке.
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    if (ParentPanel.IsVisible)
+                    if (ParentPanel.IsVisible)//активна ли панель родителя (ParentPanel.IsVisible). 
                     {
                         //Получаем текущее значение поля ParentIdEntry (ID ребёнка)
                         var childId = ParentIdEntry.Text?.Trim() ?? "child1";
 #if ANDROID              
                         // Остановить старый сервис и запустить новый с новым childId   
+                        // (это нужно, чтобы сервис всегда работал с актуальным ID ребёнка).
                         StopParentLocationService();
                         StartParentLocationService(childId);
 #endif     
@@ -102,16 +148,25 @@ namespace MauiGpsDemo
                         _parentUpdateTimer?.Stop();
                         //Создаёт новый таймер на 5 секунд
                         _parentUpdateTimer = new System.Timers.Timer(5000);
+
+                        //Подписывается на событие Elapsed — при каждом срабатывании вызывает UpdateParentFromPreferences(childId)
+                        //в основном потоке (обновляет карту и данные).
                         _parentUpdateTimer.Elapsed += (s2, e2) =>
                         {
                             MainThread.BeginInvokeOnMainThread(() => UpdateParentFromPreferences(childId));
                         };
+                        //Устанавливает таймер на автообновление (каждые 5 секунд)
                         _parentUpdateTimer.AutoReset = true;
+                        //Запускает таймер  
                         _parentUpdateTimer.Start();
+                        // // Сразу обновляем карту и данные родителя
                         UpdateParentFromPreferences(childId);
                     }
                 });
             };
+            //Запускает новый debounce - таймер(_debounceTimer.Start()),
+            //который сработает через 800 мс, если пользователь не будет вводить новые символы.
+
             _debounceTimer.Start();
         }
         private void OnChildModeClicked(object sender, EventArgs e)
@@ -240,6 +295,7 @@ namespace MauiGpsDemo
             public double lat { get; set; }
             public double lng { get; set; }
             public string? time { get; set; }
+            public int battery { get; set; } // <-- ДОБАВЬ ЭТУ СТРОКУ!
         }
 
 
@@ -276,6 +332,9 @@ namespace MauiGpsDemo
             double lat = Preferences.Default.Get("ParentLastLat", 0.0);
             double lng = Preferences.Default.Get("ParentLastLng", 0.0);
             string time = Preferences.Default.Get("ParentLastTime", "нет данных");
+            ////////////////////////////////////////////////////////////////////////
+            int battery = Preferences.Default.Get("ParentLastBattery", -1);
+            /////////////////////////////////////////////////////////////////
 
             var position = new Location(lat, lng);
 
@@ -316,6 +375,25 @@ namespace MauiGpsDemo
             }
 
             ParentLocationLabel.Text = $"Широта: {lat}\nДолгота: {lng}\nДата: {localTimeStr}";
+          //  ParentBatteryLabel.Text = battery >= 0 ? $"Батарея: {battery}%" : "Батарея: нет данных";
+
+            // Обработка отображения батареи
+            if (battery >= 0 && battery <= 100)
+            {
+                Preferences.Default.Set("ParentLastBatteryValid", battery);
+            }
+            int lastValidBattery = Preferences.Default.Get("ParentLastBatteryValid", -1);
+
+            if (lastValidBattery == 0)
+                ParentBatteryLabel.Text = "Батарея: 0% (возможно, устройство выключено)";
+            else if (lastValidBattery > 0)
+                ParentBatteryLabel.Text = $"Батарея: {lastValidBattery}%";
+            else
+                ParentBatteryLabel.Text = "Батарея: нет данных";
+
+
+
+
         }
 
    
