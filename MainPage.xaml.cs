@@ -37,11 +37,31 @@ namespace MauiGpsDemo
         private System.Timers.Timer _childDebounceTimer; // отдельный debounce-таймер для ребёнка
 
 
+        /// //////////////////////////////////////////////////
+        // ДОБАВИТЬ в начало класса MainPage (после других private полей):
+        private const string apiKey = "AIzaSyC0c8YE0hiprN2emwRVq-QvE2hvZ_K--58"; // <-- СЮДА свой ключ!
+        private string firebaseToken;
+        public static FirebaseClient firebase;
+
+
+
+
+        //////////////////////////////////////////////////////
+
+
         public MainPage()
         {
             InitializeComponent();// MAUI инициализация разметки и элементов.
-            ShowPanels(null); // Прячем обе панели (или показываем нужную).
+          //  ShowPanels(null); // Прячем обе панели (или показываем нужную).
             ////////////////////////////
+            // Скрыть все панели кроме панели авторизации
+            AuthPanel.IsVisible = true;
+            SetModesVisible(false);
+
+
+
+
+            /////////////////////////////
             //  Подписка на изменение текста в ParentIdEntry ===
             ParentIdEntry.TextChanged += ParentIdEntry_TextChanged;// Подписка: если родитель меняет ID ребёнка — срабатывает debounce-логика.
                                                                   
@@ -50,6 +70,127 @@ namespace MauiGpsDemo
             ChildIdEntry.TextChanged += ChildIdEntry_TextChanged;
 
 
+        }
+
+
+
+        /// ////////////////////////////////////////////////////////////////////
+        // ДОБАВИТЬ метод авторизации в класс MainPage:
+        //private async void OnLoginClicked(object sender, EventArgs e)
+        //{
+
+
+
+        //    AuthStatusLabel.Text = ""; // сброс ошибки
+        //    string email = EmailEntry.Text?.Trim();
+        //    string password = PasswordEntry.Text;
+
+        //    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        //    {
+        //        AuthStatusLabel.Text = "Введите email и пароль.";
+        //        return;
+        //    }
+
+        //    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+        //    try
+        //    {
+        //        var auth = await authProvider.SignInWithEmailAndPasswordAsync(email, password);
+        //        firebaseToken = auth.FirebaseToken;
+        //        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+        //        {
+        //            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+        //        });
+
+        //        AuthStatusLabel.TextColor = Colors.Green;
+        //        AuthStatusLabel.Text = "Вход выполнен!";
+        //        AuthPanel.IsVisible = false; // скрыть форму после входа
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        AuthStatusLabel.TextColor = Colors.Red;
+        //        AuthStatusLabel.Text = "Ошибка: " + ex.Message;
+        //    }
+        //}
+
+        ///////////////////////////////////////////////////////////////////////////////
+
+        // === ДОБАВЛЕН МЕТОД ДЛЯ ПОКАЗА/СКРЫТИЯ ВЫБОРА РЕЖИМА ===
+        private void SetModesVisible(bool visible)
+        {
+            ChooseModeLabel.IsVisible = visible;
+            ModeButtonsPanel.IsVisible = visible;
+            ChildPanel.IsVisible = false;
+            ParentPanel.IsVisible = false;
+        }
+
+        // === ДОБАВЬ МЕТОД РЕГИСТРАЦИИ ===
+        private async void OnRegisterClicked(object sender, EventArgs e)
+        {
+            AuthStatusLabel.Text = "";
+            string email = EmailEntry.Text?.Trim();
+            string password = PasswordEntry.Text;
+
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            {
+                AuthStatusLabel.Text = "Введите email и пароль.";
+                return;
+            }
+
+            var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+            try
+            {
+                var auth = await authProvider.CreateUserWithEmailAndPasswordAsync(email, password);
+                firebaseToken = auth.FirebaseToken;
+                firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+                {
+                    AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+                });
+
+                AuthStatusLabel.TextColor = Colors.Green;
+                AuthStatusLabel.Text = "Регистрация успешна! Вход выполнен.";
+                AuthPanel.IsVisible = false;
+                SetModesVisible(true); // показать выбор режима
+            }
+            catch (Exception ex)
+            {
+                AuthStatusLabel.TextColor = Colors.Red;
+                AuthStatusLabel.Text = "Ошибка регистрации: " + ex.Message;
+            }
+        }
+
+        // === ИЗМЕНИ МЕТОД АВТОРИЗАЦИИ ===
+        private async void OnLoginClicked(object sender, EventArgs e)
+        {
+            AuthStatusLabel.Text = ""; // сброс ошибки
+            string email = EmailEntry.Text?.Trim();
+            string password = PasswordEntry.Text;
+
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            {
+                AuthStatusLabel.Text = "Введите email и пароль.";
+                return;
+            }
+
+            var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+            try
+            {
+                var auth = await authProvider.SignInWithEmailAndPasswordAsync(email, password);
+                firebaseToken = auth.FirebaseToken;
+                firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+                {
+                    AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+                });
+
+                AuthStatusLabel.TextColor = Colors.Green;
+                AuthStatusLabel.Text = "Вход выполнен!";
+                AuthPanel.IsVisible = false; // скрыть форму после входа
+                SetModesVisible(true); // показать выбор режима!
+            }
+            catch (Exception ex)
+            {
+                AuthStatusLabel.TextColor = Colors.Red;
+                AuthStatusLabel.Text = "Ошибка: " + ex.Message;
+            }
         }
 
 
@@ -490,6 +631,17 @@ namespace MauiGpsDemo
         }
     }
 }
+
+
+///////////
+//{
+//    "rules": {
+//        ".read": "now < 1912594800000",  // 2030-8-6
+//    ".write": "now < 1912594800000"  // 2030-8-6
+//  }
+//}
+
+
 
 //namespace MauiGpsDemo
 //{

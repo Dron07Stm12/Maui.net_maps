@@ -20,7 +20,16 @@ namespace MauiGpsDemo.Platforms.Android
     public class ParentLocationForegroundService : Service
     {
 
-        FirebaseClient firebase = new FirebaseClient("https://gpsdemo-5820b-default-rtdb.firebaseio.com/");
+       // FirebaseClient firebase = new FirebaseClient("https://gpsdemo-5820b-default-rtdb.firebaseio.com/");
+
+        /// /////////////////////////////////////////////////////////////////////////////
+        // ДОБАВИТЬ в сервисах вместо поля:
+        FirebaseClient firebase => MauiGpsDemo.MainPage.firebase;
+
+
+        ////////////////////////////////////////////////////////////////////////////////
+
+
         Timer pollingTimer;
         string trackingChildId = "child1";
         string channelId = "parent_location_channel";

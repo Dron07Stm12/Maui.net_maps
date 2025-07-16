@@ -3,46 +3,92 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
              x:Class="MauiGpsDemo.MainPage"
-             BackgroundColor="#5C5C79"
-                Shell.NavBarIsVisible="False"
+           
+             Shell.NavBarIsVisible="False"
              >
+    <!--BackgroundColor="#5C5C79"-->
 
-    <ScrollView>
+    <Grid>
+
+        <!-- Фоновое изображение -->
+        <Image Source="family.png"
+               Aspect="AspectFill"
+               IsEnabled="False"
+               Opacity="0.6" />
+
+
+
+        <ScrollView>
         <VerticalStackLayout Padding="30,0" Spacing="25">
 
-            <Label Text="Выберите режим" FontSize="18" HorizontalOptions="Center" FontAttributes="Bold" Margin="0,10,0,0"   />
-            <HorizontalStackLayout HorizontalOptions="Center">
+            <!-- Панель авторизации (теперь с кнопкой регистрации) -->
+            <StackLayout x:Name="AuthPanel" Spacing="10">
+                <Label Text="Авторизация" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,150,0,0"  />
+                <Entry x:Name="EmailEntry" Placeholder="Email"/>
+                <Entry x:Name="PasswordEntry" Placeholder="Пароль" IsPassword="True"/>
+                <Button Text="Войти" Clicked="OnLoginClicked" BackgroundColor="#4F4949" TextColor="White"/>
+                <!-- Добавить кнопку регистрации -->
+                <Button Text="Зарегистрироваться" Clicked="OnRegisterClicked" BackgroundColor="#4F4949" TextColor="White"/>
+                <Label x:Name="AuthStatusLabel" Text="" TextColor="Red" HorizontalOptions="Center"/>
+            </StackLayout>
+
+            <!-- Скрываем выбор режима до авторизации -->
+            <Label x:Name="ChooseModeLabel"
+                   Text="Выберите режим"
+                   FontSize="18"
+                   HorizontalOptions="Center"
+                   FontAttributes="Bold"
+                   Margin="0,100,0,0"
+                   IsVisible="False" />
+
+            <HorizontalStackLayout x:Name="ModeButtonsPanel"
+                                   HorizontalOptions="Center"
+                                   IsVisible="False">
                 <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="DarkOliveGreen" TextColor="White" />
                 <Button Text="Родитель" Clicked="OnParentModeClicked" BackgroundColor="DarkBlue" TextColor="White" />
             </HorizontalStackLayout>
 
-            <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15"   >
-                <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#16A716"/>
+            <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15">
+                <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#063006" />
                 <Label Text="Введите имя/код ребёнка:"/>
-                <Entry x:Name="ChildIdEntry" Placeholder="child1" Text="child1"/>
+                <Entry x:Name="ChildIdEntry" Placeholder="child1" Text="child1" />
                 <Label x:Name="ChildLocationLabel" Text="Ожидание отправки координат..." HorizontalOptions="Center"/>
                 <Button Text="Получить координаты" Clicked="OnGetLocationClicked" HorizontalOptions="Center" BackgroundColor="#183849" TextColor="White"/>
             </StackLayout>
 
-            <StackLayout x:Name="ParentPanel" IsVisible="False" Spacing="15"   >
-                <Label Text="Режим Родителя" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="DarkBlue"/>
-                <!--<Label Text="Имя/код ребёнка для отслеживания:"/>-->
-                <!--<Entry x:Name="ParentIdEntry" Placeholder="Введите имя/код ребёнка" PlaceholderColor="Khaki"  />-->
+            <StackLayout x:Name="ParentPanel" IsVisible="False" Spacing="15">
+                <Label Text="Режим Родителя" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#1010DC"/>
                 <Entry x:Name="ParentIdEntry" Placeholder="child1" Text="child1"/>
-                <HorizontalStackLayout  HorizontalOptions="Center"  >
-                    <Button Text="Ребенок" Clicked="OnTrackChildClicked" BackgroundColor="#7C1C1C"  TextColor="White"/>
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <Button Text="Ребенок" Clicked="OnTrackChildClicked" BackgroundColor="#411111" TextColor="White"/>
                     <Button Text="Режим карты" Clicked="OnSatelliteClicked" BackgroundColor="#4F4949" TextColor="White"/>
-                    <Button Text="След" Clicked="OnShowPointsClicked" BackgroundColor="#7C1C1C" TextColor="White"/>
-                    <!--<Button Text="Гибрид" Clicked="OnHybridClicked"/>-->
+                    <Button Text="След" Clicked="OnShowPointsClicked" BackgroundColor="#411111" TextColor="White"/>
                 </HorizontalStackLayout>
-
-                <!--<Button Text="Показать на карте" Clicked="OnTrackChildClicked"/>-->
                 <maps:Map x:Name="MyMap" HeightRequest="300" HorizontalOptions="Fill"/>
                 <Label x:Name="ParentLocationLabel" Text="Местоположение не получено." HorizontalOptions="Center"/>
-                <Label x:Name="ParentBatteryLabel" Text="Батарея: -" HorizontalOptions="Center"  FontAttributes="Bold" FontSize="18" TextColor="#0D250D"/>
+                <Label x:Name="ParentBatteryLabel" Text="Батарея: -" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18" TextColor="#11A611"/>
             </StackLayout>
 
         </VerticalStackLayout>
     </ScrollView>
 
+
+
+  </Grid>
 </ContentPage>
+
+
+<!--<Label Text="Выберите режим" FontSize="18" HorizontalOptions="Center" FontAttributes="Bold" Margin="0,10,0,0"   />
+ <HorizontalStackLayout HorizontalOptions="Center">
+     <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="DarkOliveGreen" TextColor="White" />
+     <Button Text="Родитель" Clicked="OnParentModeClicked" BackgroundColor="DarkBlue" TextColor="White" />
+ </HorizontalStackLayout>
+
+ <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15"   >
+     <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#16A716"/>
+     <Label Text="Введите имя/код ребёнка:"/>
+     <Entry x:Name="ChildIdEntry" Placeholder="child1" Text="child1"/>
+     <Label x:Name="ChildLocationLabel" Text="Ожидание отправки координат..." HorizontalOptions="Center"/>
+     <Button Text="Получить координаты" Clicked="OnGetLocationClicked" HorizontalOptions="Center" BackgroundColor="#183849" TextColor="White"/>
+ </StackLayout>-->
+    

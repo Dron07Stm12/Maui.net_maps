@@ -26,8 +26,15 @@ namespace MauiGpsDemo.Platforms.Android
         // Строка для хранения текущего провайдера локации (например, GPS).
         string locationProvider;
         // Экземпляр клиента для доступа к Firebase Realtime Database.
-        FirebaseClient firebase = new FirebaseClient("https://gpsdemo-5820b-default-rtdb.firebaseio.com/");
-        
+       // FirebaseClient firebase = new FirebaseClient("https://gpsdemo-5820b-default-rtdb.firebaseio.com/");
+
+        /// ///////////////////////////////////////////////////////////////////////////
+        // ДОБАВИТЬ в сервисах вместо поля:
+        FirebaseClient firebase => MauiGpsDemo.MainPage.firebase;
+
+
+        //////////////////////////////////////////////////////////////////////////////
+
         // Метод обязательный для сервиса. В данном случае он не используется, поэтому возвращает null.
         public override IBinder OnBind(Intent intent) => null;
 
