@@ -49,7 +49,7 @@
             </HorizontalStackLayout>
 
             <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15">
-                <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#063006" />
+                <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#0C880C" />
                 <Label Text="Введите имя/код ребёнка:"/>
                 <Entry x:Name="ChildIdEntry" Placeholder="child1" Text="child1" />
                 <Label x:Name="ChildLocationLabel" Text="Ожидание отправки координат..." HorizontalOptions="Center"/>

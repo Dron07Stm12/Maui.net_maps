@@ -43,7 +43,7 @@ namespace MauiGpsDemo
         private string firebaseToken;
         public static FirebaseClient firebase;
 
-
+        private Polyline _childPolyline; // добавь это поле в класс MainPage
 
 
         //////////////////////////////////////////////////////
@@ -494,6 +494,7 @@ namespace MauiGpsDemo
                     Label = $"Ребёнок: {childId}",
                     Location = position,
                     Type = PinType.Place,
+                    //Icon = ImageSource.FromFile("child_icon.png") // <--- вот тут добавили иконку
                 });
             }
 
@@ -587,6 +588,9 @@ namespace MauiGpsDemo
             else { MyMap.MapType = MapType.Street; }
         }
 
+
+
+        /// ////////////////////////////////////////////////////////////////////////////
         private void OnShowPointsClicked(object sender, EventArgs e)
         {
             MainThread.BeginInvokeOnMainThread(() =>
@@ -594,27 +598,43 @@ namespace MauiGpsDemo
                 if (!isTrailShown)
                 {
                     MyMap.Pins.Clear();
-                    int i = 1;
-                    foreach (var pos in childLocations)
+                    MyMap.MapElements.Clear(); // ОЧИСТИТЬ старые линии!
+
+                    // --- ДОБАВИТЬ ЛИНИЮ МАРШРУТА ---
+                    if (childLocations.Count > 1)
+                    {
+                        _childPolyline = new Polyline
+                        {
+                            StrokeColor = Colors.Green,
+                            StrokeWidth = 5,
+                        };
+                        foreach (var pos in childLocations)
+                            _childPolyline.Geopath.Add(pos);
+
+                        MyMap.MapElements.Add(_childPolyline);
+                    }
+
+                    // Добавить пин только на последнюю точку (текущую позицию ребёнка)
+                    if (childLocations.Count > 0)
                     {
                         MyMap.Pins.Add(new Pin
                         {
-                            Label = $"Точка {i}",
-                            Location = pos,
-                            Type = PinType.SavedPin
+                            Label = $"Ребёнок",
+                            Location = childLocations.Last(),
+                            Type = PinType.Place,
                         });
-                        i++;
-                    }
-                    if (childLocations.Count > 0)
-                    {
                         MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(childLocations.Last(), Distance.FromMeters(200)));
                     }
+
                     isTrailShown = true;
                     ((Button)sender).Text = "Скрыть след";
                 }
                 else
                 {
                     MyMap.Pins.Clear();
+                    MyMap.MapElements.Clear(); // Удалить линию
+
+                    // Оставить только текущий пин
                     if (childLocations.Count > 0)
                     {
                         MyMap.Pins.Add(new Pin
@@ -629,6 +649,58 @@ namespace MauiGpsDemo
                 }
             });
         }
+
+
+
+        ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+        //private void OnShowPointsClicked(object sender, EventArgs e)
+        //{
+        //    MainThread.BeginInvokeOnMainThread(() =>
+        //    {
+        //        if (!isTrailShown)
+        //        {
+        //            MyMap.Pins.Clear();
+        //            int i = 1;
+        //            foreach (var pos in childLocations)
+        //            {
+        //                MyMap.Pins.Add(new Pin
+        //                {
+        //                    Label = $"Точка {i}",
+        //                    Location = pos,
+        //                    Type = PinType.SavedPin
+        //                });
+        //                i++;
+        //            }
+        //            if (childLocations.Count > 0)
+        //            {
+        //                MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(childLocations.Last(), Distance.FromMeters(200)));
+        //            }
+        //            isTrailShown = true;
+        //            ((Button)sender).Text = "Скрыть след";
+        //        }
+        //        else
+        //        {
+        //            MyMap.Pins.Clear();
+        //            if (childLocations.Count > 0)
+        //            {
+        //                MyMap.Pins.Add(new Pin
+        //                {
+        //                    Label = $"Ребёнок",
+        //                    Location = childLocations.Last(),
+        //                    Type = PinType.Place,
+        //                });
+        //            }
+        //            isTrailShown = false;
+        //            ((Button)sender).Text = "След";
+        //        }
+        //    });
+        //}
     }
 }
 
