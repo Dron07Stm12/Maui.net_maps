@@ -14,7 +14,7 @@
         <Image Source="family.png"
                Aspect="AspectFill"
                IsEnabled="False"
-               Opacity="0.6" />
+               Opacity="0.95" />
 
 
 
@@ -44,8 +44,8 @@
             <HorizontalStackLayout x:Name="ModeButtonsPanel"
                                    HorizontalOptions="Center"
                                    IsVisible="False">
-                <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="DarkOliveGreen" TextColor="White" />
-                <Button Text="Родитель" Clicked="OnParentModeClicked" BackgroundColor="DarkBlue" TextColor="White" />
+                <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="#32480D" TextColor="White" />
+                <Button Text="Родитель" Clicked="OnParentModeClicked" BackgroundColor="#0C0C5B" TextColor="White" />
             </HorizontalStackLayout>
 
             <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15">
@@ -57,7 +57,7 @@
             </StackLayout>
 
             <StackLayout x:Name="ParentPanel" IsVisible="False" Spacing="15">
-                <Label Text="Режим Родителя" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#1010DC"/>
+                <Label Text="Режим Родителя" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#1111C8"/>
                 <Entry x:Name="ParentIdEntry" Placeholder="child1" Text="child1"/>
                 <HorizontalStackLayout HorizontalOptions="Center">
                     <Button Text="Ребенок" Clicked="OnTrackChildClicked" BackgroundColor="#411111" TextColor="White"/>
@@ -66,6 +66,7 @@
                 </HorizontalStackLayout>
                 <maps:Map x:Name="MyMap" HeightRequest="300" HorizontalOptions="Fill"/>
                 <Label x:Name="ParentLocationLabel" Text="Местоположение не получено." HorizontalOptions="Center"/>
+                    <Label x:Name="ParentStreetLabel" Text="" FontSize="18" TextColor="#902323"  HorizontalOptions="Center" FontAttributes="Bold" />
                 <Label x:Name="ParentBatteryLabel" Text="Батарея: -" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18" TextColor="#11A611"/>
             </StackLayout>
 

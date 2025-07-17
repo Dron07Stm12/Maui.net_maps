@@ -45,6 +45,10 @@ namespace MauiGpsDemo
 
         private Polyline _childPolyline; // добавь это поле в класс MainPage
 
+      
+        private const int MaxTrailPoints = 4000; // <--- Лимит теперь 4000
+
+
 
         //////////////////////////////////////////////////////
 
@@ -468,7 +472,7 @@ namespace MauiGpsDemo
             UpdateParentFromPreferences(childId);
         }
 
-        private void UpdateParentFromPreferences(string childId)
+        private async void UpdateParentFromPreferences(string childId)
         {
             double lat = Preferences.Default.Get("ParentLastLat", 0.0);
             double lng = Preferences.Default.Get("ParentLastLng", 0.0);
@@ -482,6 +486,15 @@ namespace MauiGpsDemo
                 childLocations.Last().Latitude != position.Latitude || childLocations.Last().Longitude != position.Longitude)
             {
                 childLocations.Add(position);
+
+                ///////////////////////////////
+                // Ограничиваем размер списка — максимум 4000 точек
+                if (childLocations.Count > MaxTrailPoints)
+                {
+                    childLocations.RemoveAt(0); // удаляем самую старую точку
+                }
+
+                ///////////////////////////////
             }
 
             MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMeters(200)));
@@ -515,7 +528,30 @@ namespace MauiGpsDemo
             }
 
             ParentLocationLabel.Text = $"Широта: {lat}\nДолгота: {lng}\nДата: {localTimeStr}";
-          //  ParentBatteryLabel.Text = battery >= 0 ? $"Батарея: {battery}%" : "Батарея: нет данных";
+            //  ParentBatteryLabel.Text = battery >= 0 ? $"Батарея: {battery}%" : "Батарея: нет данных";
+
+            // === ДОБАВЛЕНО: Получение улицы/адреса ===
+            string street = "—";
+            try
+            {
+                var placemarks = await Geocoding.Default.GetPlacemarksAsync(position.Latitude, position.Longitude);
+                var placemark = placemarks?.FirstOrDefault();
+                if (placemark != null)
+                {
+                    // thoroughfare — улица, featureName — номер дома, locality — город
+                    street = $"{placemark.Thoroughfare} {placemark.FeatureName}, {placemark.Locality}";
+                }
+            }
+            catch
+            {
+                street = "Адрес не найден";
+            }
+            ParentStreetLabel.Text = $"{street}"; // ← добавить Label в XAML!
+
+            // === КОНЕЦ ДОБАВЛЕНИЯ ===
+
+
+
 
             // Обработка отображения батареи
             if (battery >= 0 && battery <= 100)
