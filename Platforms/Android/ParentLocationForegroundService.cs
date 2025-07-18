@@ -61,7 +61,7 @@ namespace MauiGpsDemo.Platforms.Android
 
             StartForeground(2, notification);
 
-            pollingTimer = new Timer(10000); // 5 секунд
+            pollingTimer = new Timer(20000); // 5 секунд
             pollingTimer.Elapsed += PollingTimer_Elapsed;
             pollingTimer.Start();
 

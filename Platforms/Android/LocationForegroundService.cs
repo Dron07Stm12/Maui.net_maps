@@ -26,9 +26,12 @@ namespace MauiGpsDemo.Platforms.Android
         // Строка для хранения текущего провайдера локации (например, GPS).
         string locationProvider;
         // Экземпляр клиента для доступа к Firebase Realtime Database.
-       // FirebaseClient firebase = new FirebaseClient("https://gpsdemo-5820b-default-rtdb.firebaseio.com/");
+        // FirebaseClient firebase = new FirebaseClient("https://gpsdemo-5820b-default-rtdb.firebaseio.com/");
 
         /// ///////////////////////////////////////////////////////////////////////////
+         // ==== ДОБАВЛЕНО: WAKELOCK ====
+        private PowerManager.WakeLock _wakeLock;
+
         // ДОБАВИТЬ в сервисах вместо поля:
         FirebaseClient firebase => MauiGpsDemo.MainPage.firebase;
 
@@ -60,7 +63,21 @@ namespace MauiGpsDemo.Platforms.Android
                 var notificationManager = (NotificationManager)GetSystemService(NotificationService);
                 notificationManager.CreateNotificationChannel(channel);
             }
+            //////////////////////////////////////////////////
+            // ==== WAKELOCK ЗАХВАТ ====
+            try
+            {
+                var pm = (PowerManager)GetSystemService(PowerService);
+                _wakeLock = pm.NewWakeLock(WakeLockFlags.Partial, "MauiGpsDemo:GpsLock");
+                _wakeLock?.Acquire();
+                Log.Info("GPS", "WakeLock acquired");
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("GPS", $"WakeLock error: {ex}");
+            }
 
+            ////////////////////////////////////////////////////////
 
 
         }
@@ -84,12 +101,12 @@ namespace MauiGpsDemo.Platforms.Android
             if (availableProviders.Contains(LocationManager.GpsProvider))
             {
                 // Запрашиваем обновления координат каждые 10 секунд (10000 мс), без минимального смещения (0 метров), this — текущий listener.
-                locationManager.RequestLocationUpdates(LocationManager.GpsProvider, 10000, 0, this);
+                locationManager.RequestLocationUpdates(LocationManager.GpsProvider, 25000, 0, this);
             }
             // Если GPS нет, но есть сетевой провайдер — используем его.
             else if (availableProviders.Contains(LocationManager.NetworkProvider))
             {
-                locationManager.RequestLocationUpdates(LocationManager.NetworkProvider, 10000, 0, this);
+                locationManager.RequestLocationUpdates(LocationManager.NetworkProvider, 25000, 0, this);
             }
             else
             {
@@ -104,6 +121,12 @@ namespace MauiGpsDemo.Platforms.Android
 
             // Сохраняем идентификатор ребёнка в Preferences (локальное хранилище ключ-значение).
             Preferences.Default.Set("CurrentChildId", childId);
+
+
+
+
+
+
             // Возвращаем флаг, что сервис должен быть перезапущен системой, если его убьют.
             return StartCommandResult.Sticky;
         }
@@ -149,6 +172,8 @@ namespace MauiGpsDemo.Platforms.Android
 
         public void OnLocationChanged(Location location)
         {
+
+            Log.Info("GPS", $"OnLocationChanged: {location.Latitude}, {location.Longitude} at {DateTime.UtcNow:O}");
             string childId = Preferences.Default.Get("CurrentChildId", "child1");
 
             // Получение уровня батареи
@@ -181,16 +206,63 @@ namespace MauiGpsDemo.Platforms.Android
 
             _ = System.Threading.Tasks.Task.Run(async () =>
             {
-                await firebase
-                    .Child("locations")
-                    .Child(childId)
-                    .PutAsync(data);
+
+                try
+                {
+                   
+
+                    await firebase
+                  .Child("locations")
+                  .Child(childId)
+                  .PutAsync(data);
+                    Log.Info("GPS", "Firebase PutAsync success");
+
+
+
+                }
+                catch (Exception ex)
+                {
+
+                    Log.Warn("GPS", $"Firebase PutAsync failed: {ex}");
+                }
+
+
+              
             });
+
+            Log.Info("GPS", "OnLocationChanged: completed");
+        }
+       
+        /// /////////////////////////////
+      
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            locationManager?.RemoveUpdates(this);
+            ///////////////////////////////////
+            // === WAKELOCK ОСВОБОЖДЕНИЕ ===
+            try
+            {
+                if (_wakeLock != null && _wakeLock.IsHeld)
+                {
+                    _wakeLock.Release();
+                    _wakeLock = null;
+                    Log.Info("GPS", "WakeLock released");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("GPS", $"WakeLock release error: {ex}");
+            }
+
+
+            /////////////////////////////////
+            Log.Info("GPS", "LocationForegroundService destroyed");
         }
 
-
-
-
+       
+        /// ///////////////////////////
+        
 
         public void OnProviderDisabled(string provider) { }
         public void OnProviderEnabled(string provider) { }
