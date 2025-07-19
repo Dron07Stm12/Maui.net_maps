@@ -84,48 +84,59 @@ namespace MauiGpsDemo.Platforms.Android
         // Главный метод жизненного цикла сервиса — вызывается при каждом запуске или перезапуске.
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
-            // Получаем из intent идентификатор ребёнка, если не передан — используем "child1".
-            string childId = intent.GetStringExtra("childId") ?? "child1";
-            // Создаём уведомление для foreground-сервиса.
-            var notification = new NotificationCompat.Builder(this, "location_channel")
-                .SetContentTitle("Отслеживание местоположения")
-                .SetContentText("Координаты отправляются в фоне")
-                .SetSmallIcon(Resource.Drawable.abc_btn_radio_material) // <- стандартная иконка!
-                .Build();
-            // Переводим сервис в режим foreground с этим уведомлением (иначе Android может убить сервис).
-            StartForeground(1, notification);
 
-            // Получаем список включённых провайдеров локации (GPS, Network и т.д.).
-            var availableProviders = locationManager.GetProviders(true); // true - только включённые
-            // Если доступен GPS-провайдер, подписываемся на его обновления.
-            if (availableProviders.Contains(LocationManager.GpsProvider))
+            try
             {
-                // Запрашиваем обновления координат каждые 10 секунд (10000 мс), без минимального смещения (0 метров), this — текущий listener.
-                locationManager.RequestLocationUpdates(LocationManager.GpsProvider, 25000, 0, this);
+                // Инициализация locationManager, если он по какой-то причине null (например, сервис был пересоздан системой)
+                if (locationManager == null)
+                    locationManager = (LocationManager)GetSystemService(LocationService);
+
+
+                // Получаем из intent идентификатор ребёнка, если не передан — используем "child1".
+                string childId = intent.GetStringExtra("childId") ?? "child1";
+                // Создаём уведомление для foreground-сервиса.
+                var notification = new NotificationCompat.Builder(this, "location_channel")
+                    .SetContentTitle("Отслеживание местоположения")
+                    .SetContentText("Координаты отправляются в фоне")
+                    .SetSmallIcon(Resource.Drawable.abc_btn_radio_material) // <- стандартная иконка!
+                    .Build();
+                // Переводим сервис в режим foreground с этим уведомлением (иначе Android может убить сервис).
+                StartForeground(1, notification);
+
+                // Получаем список включённых провайдеров локации (GPS, Network и т.д.).
+                var availableProviders = locationManager.GetProviders(true); // true - только включённые
+                                                                             // Если доступен GPS-провайдер, подписываемся на его обновления.
+                if (availableProviders.Contains(LocationManager.GpsProvider))
+                {
+                    // Запрашиваем обновления координат каждые 10 секунд (10000 мс), без минимального смещения (0 метров), this — текущий listener.
+                    locationManager.RequestLocationUpdates(LocationManager.GpsProvider, 25000, 0, this);
+                }
+                // Если GPS нет, но есть сетевой провайдер — используем его.
+                else if (availableProviders.Contains(LocationManager.NetworkProvider))
+                {
+                    locationManager.RequestLocationUpdates(LocationManager.NetworkProvider, 25000, 0, this);
+                }
+                else
+                {
+
+                    // Нет доступных провайдеров
+                    Log.Warn("GPS", "Нет доступных провайдеров локации!");
+                }
+                // Проверяем разрешения на доступ к местоположению
+                // Проверяем доступные провайдеры (GPS и Network)
+                //  locationManager.RequestLocationUpdates(locationProvider, 10000, 0, this);
+
+
+                // Сохраняем идентификатор ребёнка в Preferences (локальное хранилище ключ-значение).
+                Preferences.Default.Set("CurrentChildId", childId);
+
+
             }
-            // Если GPS нет, но есть сетевой провайдер — используем его.
-            else if (availableProviders.Contains(LocationManager.NetworkProvider))
+            catch (Exception ex)
             {
-                locationManager.RequestLocationUpdates(LocationManager.NetworkProvider, 25000, 0, this);
+
+                Log.Error("GPS", $"OnStartCommand exception: {ex}");
             }
-            else
-            {
-
-                // Нет доступных провайдеров
-                Log.Warn("GPS", "Нет доступных провайдеров локации!");
-            }
-            // Проверяем разрешения на доступ к местоположению
-            // Проверяем доступные провайдеры (GPS и Network)
-            //  locationManager.RequestLocationUpdates(locationProvider, 10000, 0, this);
-
-
-            // Сохраняем идентификатор ребёнка в Preferences (локальное хранилище ключ-значение).
-            Preferences.Default.Set("CurrentChildId", childId);
-
-
-
-
-
 
             // Возвращаем флаг, что сервис должен быть перезапущен системой, если его убьют.
             return StartCommandResult.Sticky;
@@ -204,31 +215,73 @@ namespace MauiGpsDemo.Platforms.Android
             if (batteryPct >= 0 && batteryPct <= 100)
                 data["battery"] = batteryPct;
 
+            //_ = System.Threading.Tasks.Task.Run(async () =>
+            //{
+
+            //    try
+            //    {
+            //        await MauiGpsDemo.MainPage.EnsureFirebaseTokenAsync();
+
+            //        await firebase
+            //      .Child("locations")
+            //      .Child(childId)
+            //      .PutAsync(data);
+            //        Log.Info("GPS", "Firebase PutAsync success");
+
+
+
+            //    }
+            //    catch (Exception ex)
+            //    {
+
+            //        Log.Warn("GPS", $"Firebase PutAsync failed: {ex}");
+            //    }
+
+
+
+            //});
+
             _ = System.Threading.Tasks.Task.Run(async () =>
             {
-
                 try
                 {
-                   
+                    await MauiGpsDemo.MainPage.EnsureFirebaseTokenAsync();
 
                     await firebase
-                  .Child("locations")
-                  .Child(childId)
-                  .PutAsync(data);
+                        .Child("locations")
+                        .Child(childId)
+                        .PutAsync(data);
+
                     Log.Info("GPS", "Firebase PutAsync success");
-
-
-
                 }
                 catch (Exception ex)
                 {
-
                     Log.Warn("GPS", $"Firebase PutAsync failed: {ex}");
+
+                    // Если ошибка связана с невалидным токеном или правами — пробуем форс-обновить токен и повторить один раз
+                    if (ex.Message.Contains("401") || ex.Message.Contains("Permission denied"))
+                    {
+                        try
+                        {
+                            Log.Warn("GPS", "Attempting force token refresh after 401/Permission denied");
+                            await MauiGpsDemo.MainPage.EnsureFirebaseTokenAsync(true);
+
+                            await firebase
+                                .Child("locations")
+                                .Child(childId)
+                                .PutAsync(data);
+
+                            Log.Info("GPS", "Firebase PutAsync retry success");
+                        }
+                        catch (Exception ex2)
+                        {
+                            Log.Warn("GPS", $"Firebase PutAsync retry failed: {ex2}");
+                        }
+                    }
                 }
-
-
-              
             });
+
+
 
             Log.Info("GPS", "OnLocationChanged: completed");
         }

@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using Timer = System.Timers.Timer;
+using Android.Util;
 
 namespace MauiGpsDemo.Platforms.Android
 {
@@ -70,10 +71,37 @@ namespace MauiGpsDemo.Platforms.Android
             return StartCommandResult.Sticky;
         }
 
+        //private async void PollingTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        // АНДРЕЙ МЕНЯЙ ЗДЕСЬ — добавь эту строку!
+        //        await MauiGpsDemo.MainPage.EnsureFirebaseTokenAsync();
+
+
+        //        var loc = await firebase
+        //            .Child("locations")
+        //            .Child(trackingChildId)
+        //            .OnceSingleAsync<GpsLocation>();
+
+        //        if (loc != null)
+        //        {
+        //            Preferences.Default.Set("ParentLastLat", loc.lat);
+        //            Preferences.Default.Set("ParentLastLng", loc.lng);
+        //            Preferences.Default.Set("ParentLastTime", loc.time ?? DateTime.UtcNow.ToString("o"));
+        //            Preferences.Default.Set("ParentLastBattery", loc.battery); // добавлено 
+        //        }
+        //    }
+        //    catch { /* Можно добавить логирование */ }
+        //}
+
+
         private async void PollingTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             try
             {
+                await MauiGpsDemo.MainPage.EnsureFirebaseTokenAsync();
+
                 var loc = await firebase
                     .Child("locations")
                     .Child(trackingChildId)
@@ -84,16 +112,48 @@ namespace MauiGpsDemo.Platforms.Android
                     Preferences.Default.Set("ParentLastLat", loc.lat);
                     Preferences.Default.Set("ParentLastLng", loc.lng);
                     Preferences.Default.Set("ParentLastTime", loc.time ?? DateTime.UtcNow.ToString("o"));
-                    Preferences.Default.Set("ParentLastBattery", loc.battery); // добавлено 
+                    Preferences.Default.Set("ParentLastBattery", loc.battery);
                 }
             }
-            catch { /* Можно добавить логирование */ }
+            catch (Exception ex)
+            {
+                Log.Warn("GPS", $"Parent Firebase read failed: {ex}");
+
+                // Если ошибка связана с невалидным токеном или правами — пробуем форс-обновить токен и повторить один раз
+                if (ex.Message.Contains("401") || ex.Message.Contains("Permission denied"))
+                {
+                    try
+                    {
+                        Log.Warn("GPS", "Parent: Attempting force token refresh after 401/Permission denied");
+                        await MauiGpsDemo.MainPage.EnsureFirebaseTokenAsync(true);
+
+                        var loc = await firebase
+                            .Child("locations")
+                            .Child(trackingChildId)
+                            .OnceSingleAsync<GpsLocation>();
+
+                        if (loc != null)
+                        {
+                            Preferences.Default.Set("ParentLastLat", loc.lat);
+                            Preferences.Default.Set("ParentLastLng", loc.lng);
+                            Preferences.Default.Set("ParentLastTime", loc.time ?? DateTime.UtcNow.ToString("o"));
+                            Preferences.Default.Set("ParentLastBattery", loc.battery);
+                        }
+                    }
+                    catch (Exception ex2)
+                    {
+                        Log.Warn("GPS", $"Parent Firebase retry failed: {ex2}");
+                    }
+                }
+            }
         }
+
 
         public override void OnDestroy()
         {
             pollingTimer?.Stop();
             pollingTimer?.Dispose();
+            pollingTimer = null; // Обнуляем ссылку на таймер
             base.OnDestroy();
         }
 

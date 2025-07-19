@@ -37,8 +37,8 @@ namespace MauiGpsDemo
         private System.Timers.Timer _childDebounceTimer; // отдельный debounce-таймер для ребёнка
 
         private const string apiKey = "AIzaSyC0c8YE0hiprN2emwRVq-QvE2hvZ_K--58"; // <-- СЮДА свой ключ!
-        private string firebaseToken;
-        public static FirebaseClient firebase;
+      //  private string firebaseToken;
+      //  public static FirebaseClient firebase;
 
         private Polyline _childPolyline; // добавь это поле в класс MainPage
   
@@ -47,11 +47,15 @@ namespace MauiGpsDemo
 
 
         /// ///////////////////////////////////////////////////////////////////
-        // === TOKEN REFRESH ===
-        //private FirebaseAuthLink _authLink;
-        //private string _email, _password;
-        //private DateTime firebaseTokenExpiryUtc; // Время окончания действия токена
+       // ======= АНДРЕЙ МЕНЯЙ ЗДЕСЬ! =======
+        // Сделать токен, клиента, поля и метод static — для доступа из сервисов!
+        public static string firebaseToken; // static
+        public static FirebaseClient firebase; // static
 
+        private static FirebaseAuthLink _authLink; // static
+        private static string _email, _password;   // static
+        private static DateTime firebaseTokenExpiryUtc; // static
+        // ======= АНДРЕЙ МЕНЯЙ ЗДЕСЬ! КОНЕЦ =======
 
         //////////////////////////////////////////////////////
 
@@ -133,87 +137,6 @@ namespace MauiGpsDemo
         // === ДОБАВЬ МЕТОД РЕГИСТРАЦИИ ===
         // === ДОБАВИТЬ/ИЗМЕНИТЬ методы регистрации и логина: ===
 
-        //private async void OnRegisterClicked(object sender, EventArgs e)
-        //{
-        //    AuthStatusLabel.Text = "";
-        //    string email = EmailEntry.Text?.Trim();
-        //    string password = PasswordEntry.Text;
-
-        //    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-        //    {
-        //        AuthStatusLabel.Text = "Введите email и пароль.";
-        //        return;
-        //    }
-
-        //    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-        //    try
-        //    {
-        //        var auth = await authProvider.CreateUserWithEmailAndPasswordAsync(email, password);
-        //        firebaseToken = auth.FirebaseToken;
-        //        firebaseTokenExpiryUtc = auth.Created.AddSeconds(auth.ExpiresIn); // === TOKEN REFRESH ===
-        //        _authLink = auth; // === TOKEN REFRESH ===
-        //        _email = email;   // === TOKEN REFRESH ===
-        //        _password = password; // === TOKEN REFRESH ===
-
-        //        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
-        //        {
-        //            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
-        //        });
-
-        //        AuthStatusLabel.TextColor = Colors.Green;
-        //        AuthStatusLabel.Text = "Регистрация успешна! Вход выполнен.";
-        //        AuthPanel.IsVisible = false;
-        //        SetModesVisible(true); // показать выбор режима
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AuthStatusLabel.TextColor = Colors.Red;
-        //        AuthStatusLabel.Text = "Ошибка регистрации: " + ex.Message;
-        //    }
-        //}
-
-        //private async void OnLoginClicked(object sender, EventArgs e)
-        //{
-        //    AuthStatusLabel.Text = ""; // сброс ошибки
-        //    string email = EmailEntry.Text?.Trim();
-        //    string password = PasswordEntry.Text;
-
-        //    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-        //    {
-        //        AuthStatusLabel.Text = "Введите email и пароль.";
-        //        return;
-        //    }
-
-        //    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-        //    try
-        //    {
-        //        var auth = await authProvider.SignInWithEmailAndPasswordAsync(email, password);
-        //        firebaseToken = auth.FirebaseToken;
-        //        firebaseTokenExpiryUtc = auth.Created.AddSeconds(auth.ExpiresIn); // === TOKEN REFRESH ===
-        //        _authLink = auth; // === TOKEN REFRESH ===
-        //        _email = email;   // === TOKEN REFRESH ===
-        //        _password = password; // === TOKEN REFRESH ===
-
-        //        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
-        //        {
-        //            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
-        //        });
-
-        //        AuthStatusLabel.TextColor = Colors.Green;
-        //        AuthStatusLabel.Text = "Вход выполнен!";
-        //        AuthPanel.IsVisible = false; // скрыть форму после входа
-        //        SetModesVisible(true); // показать выбор режима!
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AuthStatusLabel.TextColor = Colors.Red;
-        //        AuthStatusLabel.Text = "Ошибка: " + ex.Message;
-        //    }
-        //}
-
-
-
-
         private async void OnRegisterClicked(object sender, EventArgs e)
         {
             AuthStatusLabel.Text = "";
@@ -231,6 +154,11 @@ namespace MauiGpsDemo
             {
                 var auth = await authProvider.CreateUserWithEmailAndPasswordAsync(email, password);
                 firebaseToken = auth.FirebaseToken;
+                firebaseTokenExpiryUtc = auth.Created.AddSeconds(auth.ExpiresIn); // === TOKEN REFRESH ===
+                _authLink = auth; // === TOKEN REFRESH ===
+                _email = email;   // === TOKEN REFRESH ===
+                _password = password; // === TOKEN REFRESH ===
+
                 firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
                 {
                     AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
@@ -248,7 +176,6 @@ namespace MauiGpsDemo
             }
         }
 
-        // === ИЗМЕНИ МЕТОД АВТОРИЗАЦИИ ===
         private async void OnLoginClicked(object sender, EventArgs e)
         {
             AuthStatusLabel.Text = ""; // сброс ошибки
@@ -266,6 +193,11 @@ namespace MauiGpsDemo
             {
                 var auth = await authProvider.SignInWithEmailAndPasswordAsync(email, password);
                 firebaseToken = auth.FirebaseToken;
+                firebaseTokenExpiryUtc = auth.Created.AddSeconds(auth.ExpiresIn); // === TOKEN REFRESH ===
+                _authLink = auth; // === TOKEN REFRESH ===
+                _email = email;   // === TOKEN REFRESH ===
+                _password = password; // === TOKEN REFRESH ===
+
                 firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
                 {
                     AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
@@ -284,13 +216,85 @@ namespace MauiGpsDemo
         }
 
 
+
+
+        //private async void OnRegisterClicked(object sender, EventArgs e)
+        //{
+        //    AuthStatusLabel.Text = "";
+        //    string email = EmailEntry.Text?.Trim();
+        //    string password = PasswordEntry.Text;
+
+        //    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        //    {
+        //        AuthStatusLabel.Text = "Введите email и пароль.";
+        //        return;
+        //    }
+
+        //    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+        //    try
+        //    {
+        //        var auth = await authProvider.CreateUserWithEmailAndPasswordAsync(email, password);
+        //        firebaseToken = auth.FirebaseToken;
+        //        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+        //        {
+        //            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+        //        });
+
+        //        AuthStatusLabel.TextColor = Colors.Green;
+        //        AuthStatusLabel.Text = "Регистрация успешна! Вход выполнен.";
+        //        AuthPanel.IsVisible = false;
+        //        SetModesVisible(true); // показать выбор режима
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        AuthStatusLabel.TextColor = Colors.Red;
+        //        AuthStatusLabel.Text = "Ошибка регистрации: " + ex.Message;
+        //    }
+        //}
+
+        //// === ИЗМЕНИ МЕТОД АВТОРИЗАЦИИ ===
+        //private async void OnLoginClicked(object sender, EventArgs e)
+        //{
+        //    AuthStatusLabel.Text = ""; // сброс ошибки
+        //    string email = EmailEntry.Text?.Trim();
+        //    string password = PasswordEntry.Text;
+
+        //    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        //    {
+        //        AuthStatusLabel.Text = "Введите email и пароль.";
+        //        return;
+        //    }
+
+        //    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+        //    try
+        //    {
+        //        var auth = await authProvider.SignInWithEmailAndPasswordAsync(email, password);
+        //        firebaseToken = auth.FirebaseToken;
+        //        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+        //        {
+        //            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+        //        });
+
+        //        AuthStatusLabel.TextColor = Colors.Green;
+        //        AuthStatusLabel.Text = "Вход выполнен!";
+        //        AuthPanel.IsVisible = false; // скрыть форму после входа
+        //        SetModesVisible(true); // показать выбор режима!
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        AuthStatusLabel.TextColor = Colors.Red;
+        //        AuthStatusLabel.Text = "Ошибка: " + ex.Message;
+        //    }
+        //}
+
+
         // === ДОБАВЬ этот метод в MainPage.cs: ===
 
 
         /// Проверяет, не истёк ли токен. Если истёк — обновляет, если нет — ничего не делает.
         /// Вызывать перед использованием firebase!
 
-        //public async Task EnsureFirebaseTokenAsync()
+        //public static async Task EnsureFirebaseTokenAsync()
         //{
         //    // Если токена нет, или осталось меньше 2 минут — обновляем
         //    if (string.IsNullOrEmpty(firebaseToken) ||
@@ -314,9 +318,81 @@ namespace MauiGpsDemo
         //}
 
 
+        //public static async Task EnsureFirebaseTokenAsync()
+        //{
+        //    if (string.IsNullOrEmpty(firebaseToken) ||
+        //        DateTime.UtcNow > firebaseTokenExpiryUtc.AddMinutes(-8))
+        //    {
+        //        System.Diagnostics.Debug.WriteLine($"[FIREBASE] Need refresh. Now: {DateTime.UtcNow}, Expiry: {firebaseTokenExpiryUtc}");
+        //        if (!string.IsNullOrEmpty(_email) && !string.IsNullOrEmpty(_password))
+        //        {
+        //            System.Diagnostics.Debug.WriteLine($"[FIREBASE] Refreshing token for {_email}");
+        //            try
+        //            {
+        //                var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+        //                _authLink = await authProvider.SignInWithEmailAndPasswordAsync(_email, _password);
 
+        //                firebaseToken = _authLink.FirebaseToken;
+        //                firebaseTokenExpiryUtc = _authLink.Created.AddSeconds(_authLink.ExpiresIn);
+        //                firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+        //                {
+        //                    AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+        //                });
+        //                System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token refreshed OK. Expires at {firebaseTokenExpiryUtc}");
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token refresh ERROR: {ex}");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            System.Diagnostics.Debug.WriteLine("[FIREBASE] Email/password not set, cannot refresh token!");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token still valid. Now: {DateTime.UtcNow}, Expires: {firebaseTokenExpiryUtc}");
+        //    }
+        //}
 
+        public static async Task EnsureFirebaseTokenAsync(bool force = false)
+        {
+            if (force || string.IsNullOrEmpty(firebaseToken) ||
+                DateTime.UtcNow > firebaseTokenExpiryUtc.AddMinutes(-8))
+            {
+                System.Diagnostics.Debug.WriteLine($"[FIREBASE] Need refresh. Now: {DateTime.UtcNow}, Expiry: {firebaseTokenExpiryUtc}, Force: {force}");
+                if (!string.IsNullOrEmpty(_email) && !string.IsNullOrEmpty(_password))
+                {
+                    System.Diagnostics.Debug.WriteLine($"[FIREBASE] Refreshing token for {_email}");
+                    try
+                    {
+                        var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+                        _authLink = await authProvider.SignInWithEmailAndPasswordAsync(_email, _password);
 
+                        firebaseToken = _authLink.FirebaseToken;
+                        firebaseTokenExpiryUtc = _authLink.Created.AddSeconds(_authLink.ExpiresIn);
+                        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+                        {
+                            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+                        });
+                        System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token refreshed OK. Expires at {firebaseTokenExpiryUtc}");
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token refresh ERROR: {ex}");
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("[FIREBASE] Email/password not set, cannot refresh token!");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token still valid. Now: {DateTime.UtcNow}, Expires: {firebaseTokenExpiryUtc}");
+            }
+        }
 
         private void ChildIdEntry_TextChanged(object sender, TextChangedEventArgs e)
         {
