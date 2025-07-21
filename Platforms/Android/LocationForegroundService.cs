@@ -215,31 +215,7 @@ namespace MauiGpsDemo.Platforms.Android
             if (batteryPct >= 0 && batteryPct <= 100)
                 data["battery"] = batteryPct;
 
-            //_ = System.Threading.Tasks.Task.Run(async () =>
-            //{
-
-            //    try
-            //    {
-            //        await MauiGpsDemo.MainPage.EnsureFirebaseTokenAsync();
-
-            //        await firebase
-            //      .Child("locations")
-            //      .Child(childId)
-            //      .PutAsync(data);
-            //        Log.Info("GPS", "Firebase PutAsync success");
-
-
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-
-            //        Log.Warn("GPS", $"Firebase PutAsync failed: {ex}");
-            //    }
-
-
-
-            //});
+           
 
             _ = System.Threading.Tasks.Task.Run(async () =>
             {
@@ -418,3 +394,31 @@ namespace MauiGpsDemo.Platforms.Android
 //Выбирает лучший из доступных провайдеров локации и подписывается на их обновления.
 //Сохранит id ребёнка для последующей отправки координат.
 //Гарантирует перезапуск (если система выгрузила сервис).
+
+
+//////////////////////
+//_ = System.Threading.Tasks.Task.Run(async () =>
+//{
+
+//    try
+//    {
+//        await MauiGpsDemo.MainPage.EnsureFirebaseTokenAsync();
+
+//        await firebase
+//      .Child("locations")
+//      .Child(childId)
+//      .PutAsync(data);
+//        Log.Info("GPS", "Firebase PutAsync success");
+
+
+
+//    }
+//    catch (Exception ex)
+//    {
+
+//        Log.Warn("GPS", $"Firebase PutAsync failed: {ex}");
+//    }
+
+
+
+//});

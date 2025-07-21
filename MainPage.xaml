@@ -6,7 +6,7 @@
            
              Shell.NavBarIsVisible="False"
              >
-    <!--BackgroundColor="#5C5C79"-->
+   
 
     <Grid>
 
@@ -33,20 +33,61 @@
             </StackLayout>
 
             <!-- Скрываем выбор режима до авторизации -->
-            <Label x:Name="ChooseModeLabel"
+            <!--<Label x:Name="ChooseModeLabel"
                    Text="Выберите режим"
                    FontSize="18"
                    HorizontalOptions="Center"
                    FontAttributes="Bold"
                    Margin="0,100,0,0"
-                   IsVisible="False" />
+                   IsVisible="False" />-->
 
-            <HorizontalStackLayout x:Name="ModeButtonsPanel"
+
+                <!-- === АНДРЕЙ: добавлено, выбор режима + Выйти -->
+                <StackLayout x:Name="ModeButtonsPanel"
+                   HorizontalOptions="Center"
+                   IsVisible="False"
+                   Spacing="10"
+                   Margin="0,100,0,0">
+                                <Label x:Name="ChooseModeLabel"
+                       Text="Выберите режим"
+                       FontSize="18"
+                       HorizontalOptions="Center"
+                       FontAttributes="Bold"/>
+                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="0">
+                                    <Button Text="Ребёнок"
+                            Clicked="OnChildModeClicked"
+                            BackgroundColor="#32480D"
+                            TextColor="White"
+                            Margin="0"
+                            Padding="15,0" 
+                                        HorizontalOptions="Center"/>
+                                        <Button Text="Родитель"
+                            Clicked="OnParentModeClicked"
+                            BackgroundColor="#0C0C5B"
+                            TextColor="White"
+                            Margin="0"
+                            Padding="15,0"
+                            HorizontalOptions="Center"/>
+                                        <Button x:Name="LogoutButton"
+                            Text="Выйти"
+                            IsVisible="True"
+                            Clicked="OnLogoutClicked"
+                            BackgroundColor="#210B0B"
+                            TextColor="White"
+                            Margin="20,0,0,0"  
+                                            Padding="15,0"
+                            HorizontalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </StackLayout>
+                <!-- === -->
+
+
+                <!--<HorizontalStackLayout x:Name="ModeButtonsPanel"
                                    HorizontalOptions="Center"
                                    IsVisible="False">
                 <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="#32480D" TextColor="White" />
                 <Button Text="Родитель" Clicked="OnParentModeClicked" BackgroundColor="#0C0C5B" TextColor="White" />
-            </HorizontalStackLayout>
+            </HorizontalStackLayout>-->
 
             <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15">
                 <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#0C880C" />

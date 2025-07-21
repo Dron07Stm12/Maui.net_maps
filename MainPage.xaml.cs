@@ -58,6 +58,10 @@ namespace MauiGpsDemo
         // ======= АНДРЕЙ МЕНЯЙ ЗДЕСЬ! КОНЕЦ =======
 
         //////////////////////////////////////////////////////
+        /// <summary>
+        /// 
+         private bool isModePanelExpanded = false;
+        /// </summary>
 
 
         public MainPage()
@@ -67,8 +71,12 @@ namespace MauiGpsDemo
             ////////////////////////////
             // Скрыть все панели кроме панели авторизации
             AuthPanel.IsVisible = true;
-            SetModesVisible(false);
+            //SetModesVisible(false);
 
+            
+            ModeButtonsPanel.IsVisible = false;
+            ChildPanel.IsVisible = false;
+            ParentPanel.IsVisible = false;
 
 
 
@@ -167,7 +175,14 @@ namespace MauiGpsDemo
                 AuthStatusLabel.TextColor = Colors.Green;
                 AuthStatusLabel.Text = "Регистрация успешна! Вход выполнен.";
                 AuthPanel.IsVisible = false;
-                SetModesVisible(true); // показать выбор режима
+                // SetModesVisible(true); // показать выбор режима
+               
+                ModeButtonsPanel.IsVisible = true;
+                ChildPanel.IsVisible = false;
+                ParentPanel.IsVisible = false;
+
+
+
             }
             catch (Exception ex)
             {
@@ -206,7 +221,14 @@ namespace MauiGpsDemo
                 AuthStatusLabel.TextColor = Colors.Green;
                 AuthStatusLabel.Text = "Вход выполнен!";
                 AuthPanel.IsVisible = false; // скрыть форму после входа
-                SetModesVisible(true); // показать выбор режима!
+                                             //  SetModesVisible(true); // показать выбор режима!
+               
+                ModeButtonsPanel.IsVisible = true;
+                ChildPanel.IsVisible = false;
+                ParentPanel.IsVisible = false;
+                // ===
+
+
             }
             catch (Exception ex)
             {
@@ -215,7 +237,24 @@ namespace MauiGpsDemo
             }
         }
 
+        // === АНДРЕЙ: обработчик выхода (вызывает кнопка "Выйти")
+        private void OnLogoutClicked(object sender, EventArgs e)
+        {
+            AuthPanel.IsVisible = true;
+           
+            ModeButtonsPanel.IsVisible = false;
+            ChildPanel.IsVisible = false;
+            ParentPanel.IsVisible = false;
 
+            EmailEntry.Text = "";
+            PasswordEntry.Text = "";
+            AuthStatusLabel.Text = "";
+
+            firebaseToken = null;
+            firebase = null;
+            Preferences.Default.Clear();
+        }
+        // ===
 
 
         //private async void OnRegisterClicked(object sender, EventArgs e)
@@ -512,12 +551,14 @@ namespace MauiGpsDemo
         }
         private void OnChildModeClicked(object sender, EventArgs e)
         {
+            
             ShowPanels("child");
             _ = RequestLocationAndStartServiceAsync();
         }
 
         private void OnParentModeClicked(object sender, EventArgs e)
         {
+            
             ShowPanels("parent");
             StopChildLocationService();
         }
@@ -884,55 +925,6 @@ namespace MauiGpsDemo
 
 
 
-        ///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-        //private void OnShowPointsClicked(object sender, EventArgs e)
-        //{
-        //    MainThread.BeginInvokeOnMainThread(() =>
-        //    {
-        //        if (!isTrailShown)
-        //        {
-        //            MyMap.Pins.Clear();
-        //            int i = 1;
-        //            foreach (var pos in childLocations)
-        //            {
-        //                MyMap.Pins.Add(new Pin
-        //                {
-        //                    Label = $"Точка {i}",
-        //                    Location = pos,
-        //                    Type = PinType.SavedPin
-        //                });
-        //                i++;
-        //            }
-        //            if (childLocations.Count > 0)
-        //            {
-        //                MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(childLocations.Last(), Distance.FromMeters(200)));
-        //            }
-        //            isTrailShown = true;
-        //            ((Button)sender).Text = "Скрыть след";
-        //        }
-        //        else
-        //        {
-        //            MyMap.Pins.Clear();
-        //            if (childLocations.Count > 0)
-        //            {
-        //                MyMap.Pins.Add(new Pin
-        //                {
-        //                    Label = $"Ребёнок",
-        //                    Location = childLocations.Last(),
-        //                    Type = PinType.Place,
-        //                });
-        //            }
-        //            isTrailShown = false;
-        //            ((Button)sender).Text = "След";
-        //        }
-        //    });
-        //}
     }
 }
 
@@ -1506,6 +1498,60 @@ namespace MauiGpsDemo
 //// Initialize Firebase
 //const app = initializeApp(firebaseConfig);
 //const analytics = getAnalytics(app);
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+//private void OnShowPointsClicked(object sender, EventArgs e)
+//{
+//    MainThread.BeginInvokeOnMainThread(() =>
+//    {
+//        if (!isTrailShown)
+//        {
+//            MyMap.Pins.Clear();
+//            int i = 1;
+//            foreach (var pos in childLocations)
+//            {
+//                MyMap.Pins.Add(new Pin
+//                {
+//                    Label = $"Точка {i}",
+//                    Location = pos,
+//                    Type = PinType.SavedPin
+//                });
+//                i++;
+//            }
+//            if (childLocations.Count > 0)
+//            {
+//                MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(childLocations.Last(), Distance.FromMeters(200)));
+//            }
+//            isTrailShown = true;
+//            ((Button)sender).Text = "Скрыть след";
+//        }
+//        else
+//        {
+//            MyMap.Pins.Clear();
+//            if (childLocations.Count > 0)
+//            {
+//                MyMap.Pins.Add(new Pin
+//                {
+//                    Label = $"Ребёнок",
+//                    Location = childLocations.Last(),
+//                    Type = PinType.Place,
+//                });
+//            }
+//            isTrailShown = false;
+//            ((Button)sender).Text = "След";
+//        }
+//    });
+//}
 
 
 
