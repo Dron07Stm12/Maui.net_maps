@@ -690,24 +690,24 @@ namespace MauiGpsDemo
         // === ДОБАВЛЕНО: обновление карты родителя из Preferences ===
 
         // === ИЗМЕНЕНО: OnTrackChildClicked теперь тоже перезапускает сервис и таймер ===
-        private void OnTrackChildClicked(object sender, EventArgs e)
-        {
-            var childId = ParentIdEntry.Text?.Trim() ?? "child1";
-#if ANDROID
-            StopParentLocationService();
-            StartParentLocationService(childId);
-#endif
-            // Перезапустить таймер (повторяет логику из TextChanged для надёжности)
-            _parentUpdateTimer?.Stop();
-            _parentUpdateTimer = new System.Timers.Timer(10000);
-            _parentUpdateTimer.Elapsed += (s, e2) =>
-            {
-                MainThread.BeginInvokeOnMainThread(() => UpdateParentFromPreferences(childId));
-            };
-            _parentUpdateTimer.AutoReset = true;
-            _parentUpdateTimer.Start();
-            UpdateParentFromPreferences(childId);
-        }
+//        private void OnTrackChildClicked(object sender, EventArgs e)
+//        {
+//            var childId = ParentIdEntry.Text?.Trim() ?? "child1";
+//#if ANDROID
+//            StopParentLocationService();
+//            StartParentLocationService(childId);
+//#endif
+//            // Перезапустить таймер (повторяет логику из TextChanged для надёжности)
+//            _parentUpdateTimer?.Stop();
+//            _parentUpdateTimer = new System.Timers.Timer(10000);
+//            _parentUpdateTimer.Elapsed += (s, e2) =>
+//            {
+//                MainThread.BeginInvokeOnMainThread(() => UpdateParentFromPreferences(childId));
+//            };
+//            _parentUpdateTimer.AutoReset = true;
+//            _parentUpdateTimer.Start();
+//            UpdateParentFromPreferences(childId);
+//        }
 
         private async void UpdateParentFromPreferences(string childId)
         {

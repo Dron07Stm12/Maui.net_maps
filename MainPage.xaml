@@ -54,30 +54,33 @@
                        HorizontalOptions="Center"
                        FontAttributes="Bold"/>
                                 <HorizontalStackLayout HorizontalOptions="Center" Spacing="0">
-                                    <Button Text="Ребёнок"
-                            Clicked="OnChildModeClicked"
-                            BackgroundColor="#32480D"
-                            TextColor="White"
-                            Margin="0"
-                            Padding="15,0" 
-                                        HorizontalOptions="Center"/>
-                                        <Button Text="Родитель"
-                            Clicked="OnParentModeClicked"
-                            BackgroundColor="#0C0C5B"
-                            TextColor="White"
-                            Margin="0"
-                            Padding="15,0"
-                            HorizontalOptions="Center"/>
-                                        <Button x:Name="LogoutButton"
-                            Text="Выйти"
-                            IsVisible="True"
-                            Clicked="OnLogoutClicked"
-                            BackgroundColor="#210B0B"
-                            TextColor="White"
-                            Margin="20,0,0,0"  
-                                            Padding="15,0"
-                            HorizontalOptions="Center"/>
-                    </HorizontalStackLayout>
+
+                                       <Button Text="Родитель"
+                                         Clicked="OnParentModeClicked"
+                                         BackgroundColor="#05052D"
+                                         TextColor="White"
+                                         Margin="0"
+                                         Padding="15,0"
+                                         HorizontalOptions="Center"/>
+
+                                         <Button Text="Ребёнок"
+                                            Clicked="OnChildModeClicked"
+                                            BackgroundColor="#192405"
+                                            TextColor="White"
+                                            Margin="0"
+                                            Padding="15,0" 
+                                            HorizontalOptions="Center"/>
+                                       
+                                            <Button x:Name="LogoutButton"
+                                                Text="Выйти"
+                                                IsVisible="True"
+                                                Clicked="OnLogoutClicked"
+                                                BackgroundColor="#210B0B"
+                                                TextColor="White"
+                                                Margin="20,0,0,0"  
+                                                Padding="15,0"
+                                                HorizontalOptions="Center"/>
+                                </HorizontalStackLayout>
                 </StackLayout>
                 <!-- === -->
 
@@ -101,7 +104,7 @@
                 <Label Text="Режим Родителя" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#1111C8"/>
                 <Entry x:Name="ParentIdEntry" Placeholder="child1" Text="child1"/>
                 <HorizontalStackLayout HorizontalOptions="Center">
-                    <Button Text="Ребенок" Clicked="OnTrackChildClicked" BackgroundColor="#411111" TextColor="White"/>
+                    <!--<Button Text="Ребенок" Clicked="OnTrackChildClicked" BackgroundColor="#411111" TextColor="White"/>-->
                     <Button Text="Режим карты" Clicked="OnSatelliteClicked" BackgroundColor="#4F4949" TextColor="White"/>
                     <Button Text="След" Clicked="OnShowPointsClicked" BackgroundColor="#411111" TextColor="White"/>
                 </HorizontalStackLayout>
