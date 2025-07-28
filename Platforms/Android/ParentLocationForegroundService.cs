@@ -41,7 +41,7 @@ namespace MauiGpsDemo.Platforms.Android
             base.OnCreate();
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
-                var channel = new NotificationChannel(channelId, "Трекинг ребёнка", NotificationImportance.Default)
+                var channel = new NotificationChannel(channelId, "Трекинг ребёнка", NotificationImportance.High)
                 {
                     Description = "Фоновое получение координат ребёнка"
                 };
@@ -58,6 +58,7 @@ namespace MauiGpsDemo.Platforms.Android
                 .SetContentTitle("Поиск ребёнка")
                 .SetContentText($"Отслеживание координат {trackingChildId}")
                 .SetSmallIcon(Resource.Drawable.abc_btn_radio_material)
+                 .SetPriority((int)NotificationPriority.Max)
                 .Build();
 
             StartForeground(2, notification);

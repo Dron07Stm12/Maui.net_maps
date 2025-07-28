@@ -2,23 +2,21 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
-             x:Class="MauiGpsDemo.MainPage"
-           
-             Shell.NavBarIsVisible="False"
-             >
-   
+             x:Class="MauiGpsDemo.MainPage"         
+             Shell.NavBarIsVisible="False">
 
-    <Grid>
 
-        <!-- Фоновое изображение -->
-        <Image Source="family.png"
+ <Grid>
+
+    <!-- Фоновое изображение -->
+    <Image Source="family.png"
                Aspect="AspectFill"
                IsEnabled="False"
                Opacity="1" />
 
 
 
-        <ScrollView>
+    <ScrollView>
         <VerticalStackLayout Padding="30,0" Spacing="25">
 
             <!-- Панель авторизации (теперь с кнопкой регистрации) -->
@@ -26,9 +24,9 @@
                 <Label Text="Авторизация" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,150,0,0"  />
                 <Entry x:Name="EmailEntry" Placeholder="Email"/>
                 <Entry x:Name="PasswordEntry" Placeholder="Пароль" IsPassword="True"/>
-                <Button Text="Войти" Clicked="OnLoginClicked" BackgroundColor="#4F4949" TextColor="White"/>
+                <Button Text="Войти" Clicked="OnLoginClicked" BackgroundColor="#151212" TextColor="White"/>
                 <!-- Добавить кнопку регистрации -->
-                <Button Text="Зарегистрироваться" Clicked="OnRegisterClicked" BackgroundColor="#4F4949" TextColor="White"/>
+                <Button Text="Зарегистрироваться" Clicked="OnRegisterClicked" BackgroundColor="#2B1313" TextColor="White"/>
                 <Label x:Name="AuthStatusLabel" Text="" TextColor="Red" HorizontalOptions="Center"/>
             </StackLayout>
 
@@ -42,20 +40,20 @@
                    IsVisible="False" />-->
 
 
-                <!-- === АНДРЕЙ: добавлено, выбор режима + Выйти -->
-                <StackLayout x:Name="ModeButtonsPanel"
+            <!-- === АНДРЕЙ: добавлено, выбор режима + Выйти -->
+            <StackLayout x:Name="ModeButtonsPanel"
                    HorizontalOptions="Center"
                    IsVisible="False"
                    Spacing="10"
                    Margin="0,100,0,0">
-                                <Label x:Name="ChooseModeLabel"
+                <Label x:Name="ChooseModeLabel"
                        Text="Выберите режим"
-                       FontSize="18"
+                       FontSize="22"
                        HorizontalOptions="Center"
                        FontAttributes="Bold"/>
-                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="0">
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="0">
 
-                                       <Button Text="Родитель"
+                    <Button Text="Родитель"
                                          Clicked="OnParentModeClicked"
                                          BackgroundColor="#05052D"
                                          TextColor="White"
@@ -63,29 +61,29 @@
                                          Padding="15,0"
                                          HorizontalOptions="Center"/>
 
-                                         <Button Text="Ребёнок"
+                    <Button Text="Ребёнок"
                                             Clicked="OnChildModeClicked"
                                             BackgroundColor="#192405"
                                             TextColor="White"
                                             Margin="0"
                                             Padding="15,0" 
                                             HorizontalOptions="Center"/>
-                                       
-                                            <Button x:Name="LogoutButton"
+
+                    <Button x:Name="LogoutButton"
                                                 Text="Выйти"
                                                 IsVisible="True"
                                                 Clicked="OnLogoutClicked"
-                                                BackgroundColor="#210B0B"
+                                                BackgroundColor="#0F0C0C"
                                                 TextColor="White"
                                                 Margin="20,0,0,0"  
                                                 Padding="15,0"
                                                 HorizontalOptions="Center"/>
-                                </HorizontalStackLayout>
-                </StackLayout>
-                <!-- === -->
+                </HorizontalStackLayout>
+            </StackLayout>
+            <!-- === -->
 
 
-                <!--<HorizontalStackLayout x:Name="ModeButtonsPanel"
+            <!--<HorizontalStackLayout x:Name="ModeButtonsPanel"
                                    HorizontalOptions="Center"
                                    IsVisible="False">
                 <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="#32480D" TextColor="White" />
@@ -110,7 +108,7 @@
                 </HorizontalStackLayout>
                 <maps:Map x:Name="MyMap" HeightRequest="300" HorizontalOptions="Fill"/>
                 <Label x:Name="ParentLocationLabel" Text="Местоположение не получено." HorizontalOptions="Center"/>
-                    <Label x:Name="ParentStreetLabel" Text="" FontSize="18" TextColor="#902323"  HorizontalOptions="Center" FontAttributes="Bold" />
+                <Label x:Name="ParentStreetLabel" Text="" FontSize="18" TextColor="#902323"  HorizontalOptions="Center" FontAttributes="Bold" />
                 <Label x:Name="ParentBatteryLabel" Text="Батарея: -" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18" TextColor="#11A611"/>
             </StackLayout>
 

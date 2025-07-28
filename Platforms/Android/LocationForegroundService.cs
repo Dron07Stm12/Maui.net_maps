@@ -56,7 +56,7 @@ namespace MauiGpsDemo.Platforms.Android
                 string channelId = "location_channel";
                 string channelName = "Трекинг геолокации";
                 string channelDescription = "Уведомления о фоновом отслеживании координат";
-                var channel = new NotificationChannel(channelId, channelName, NotificationImportance.Default)
+                var channel = new NotificationChannel(channelId, channelName, NotificationImportance.High)
                 {
                     Description = channelDescription
                 };
@@ -98,7 +98,8 @@ namespace MauiGpsDemo.Platforms.Android
                 var notification = new NotificationCompat.Builder(this, "location_channel")
                     .SetContentTitle("Отслеживание местоположения")
                     .SetContentText("Координаты отправляются в фоне")
-                    .SetSmallIcon(Resource.Drawable.abc_btn_radio_material) // <- стандартная иконка!
+                    .SetSmallIcon(Resource.Drawable.abc_btn_radio_material)// <- стандартная иконка!
+                    .SetPriority((int)NotificationPriority.Max) 
                     .Build();
                 // Переводим сервис в режим foreground с этим уведомлением (иначе Android может убить сервис).
                 StartForeground(1, notification);

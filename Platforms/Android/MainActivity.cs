@@ -19,7 +19,7 @@ namespace MauiGpsDemo
           
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
-                var channel = new NotificationChannel("location_channel", "Location", NotificationImportance.Default)
+                var channel = new NotificationChannel("location_channel", "Location", NotificationImportance.High)
                 {
                     Description = "Отслеживание координат"
                 };
