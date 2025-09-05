@@ -80,25 +80,18 @@
                                                 HorizontalOptions="Center"/>
                 </HorizontalStackLayout>
             </StackLayout>
-            <!-- === -->
 
 
-            <!--<HorizontalStackLayout x:Name="ModeButtonsPanel"
-                                   HorizontalOptions="Center"
-                                   IsVisible="False">
-                <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="#32480D" TextColor="White" />
-                <Button Text="Родитель" Clicked="OnParentModeClicked" BackgroundColor="#0C0C5B" TextColor="White" />
-            </HorizontalStackLayout>-->
-
-            <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15">
+                <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15"  Padding="0,100,0,0" >
                 <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#0C880C" />
                 <Label Text="Введите имя/код ребёнка:"/>
                 <Entry x:Name="ChildIdEntry" Placeholder="child1" Text="child1" />
                 <Label x:Name="ChildLocationLabel" Text="Ожидание отправки координат..." HorizontalOptions="Center"/>
                 <Button Text="Получить координаты" Clicked="OnGetLocationClicked" HorizontalOptions="Center" BackgroundColor="#183849" TextColor="White"/>
-            </StackLayout>
+                <Button Text="Назад" Clicked="OnBackToModeClicked" BackgroundColor="#888" TextColor="White" HorizontalOptions="Center"/>
+                </StackLayout>
 
-            <StackLayout x:Name="ParentPanel" IsVisible="False" Spacing="15">
+                <StackLayout x:Name="ParentPanel" IsVisible="False" Spacing="15" Padding="0,15,0,0"  >
                 <Label Text="Режим Родителя" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#1111C8"/>
                 <Entry x:Name="ParentIdEntry" Placeholder="child1" Text="child1"/>
                 <HorizontalStackLayout HorizontalOptions="Center">
@@ -110,7 +103,9 @@
                 <Label x:Name="ParentLocationLabel" Text="Местоположение не получено." HorizontalOptions="Center"/>
                 <Label x:Name="ParentStreetLabel" Text="" FontSize="18" TextColor="#902323"  HorizontalOptions="Center" FontAttributes="Bold" />
                 <Label x:Name="ParentBatteryLabel" Text="Батарея: -" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18" TextColor="#11A611"/>
-            </StackLayout>
+                <Button Text="Назад" Clicked="OnBackToModeClicked" BackgroundColor="#888" TextColor="White" HorizontalOptions="Center"/>
+
+                </StackLayout>
 
         </VerticalStackLayout>
     </ScrollView>
@@ -134,4 +129,14 @@
      <Label x:Name="ChildLocationLabel" Text="Ожидание отправки координат..." HorizontalOptions="Center"/>
      <Button Text="Получить координаты" Clicked="OnGetLocationClicked" HorizontalOptions="Center" BackgroundColor="#183849" TextColor="White"/>
  </StackLayout>-->
-    
+
+
+<!-- === -->
+
+
+<!--<HorizontalStackLayout x:Name="ModeButtonsPanel"
+                        HorizontalOptions="Center"
+                        IsVisible="False">
+     <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="#32480D" TextColor="White" />
+     <Button Text="Родитель" Clicked="OnParentModeClicked" BackgroundColor="#0C0C5B" TextColor="White" />
+ </HorizontalStackLayout>-->  

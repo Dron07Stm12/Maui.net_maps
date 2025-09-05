@@ -549,19 +549,39 @@ namespace MauiGpsDemo
 
             _debounceTimer.Start();
         }
-        private void OnChildModeClicked(object sender, EventArgs e)
+
+
+        private async void OnChildModeClicked(object sender, EventArgs e)
         {
-            
+            await HideModePanelAsync();
             ShowPanels("child");
             _ = RequestLocationAndStartServiceAsync();
         }
 
-        private void OnParentModeClicked(object sender, EventArgs e)
-        {
+
+        //private void OnChildModeClicked(object sender, EventArgs e)
+        //{
             
+        //    ShowPanels("child");
+        //    _ = RequestLocationAndStartServiceAsync();
+        //}
+
+        //private void OnParentModeClicked(object sender, EventArgs e)
+        //{
+            
+        //    ShowPanels("parent");
+        //    StopChildLocationService();
+        //}
+
+        private async void OnParentModeClicked(object sender, EventArgs e)
+        {
+            await HideModePanelAsync();
             ShowPanels("parent");
             StopChildLocationService();
         }
+
+
+
 
         // === ИЗМЕНЕНО: ShowPanels для режима РОДИТЕЛЯ используем сервис и таймер, не ListenToChildLocation ===
         private void ShowPanels(string mode)
@@ -922,6 +942,31 @@ namespace MauiGpsDemo
                 }
             });
         }
+
+
+        ////////////////////////////////////////////////////////////////
+        private async Task HideModePanelAsync()
+        {
+            await ModeButtonsPanel.TranslateTo(0, -200, 300, Easing.SinIn);
+            ModeButtonsPanel.IsVisible = false;
+        }
+
+        private async Task ShowModePanelAsync()
+        {
+            ModeButtonsPanel.IsVisible = true;
+            ModeButtonsPanel.TranslationY = -200;
+            await ModeButtonsPanel.TranslateTo(0, 0, 300, Easing.SinOut);
+        }
+
+        // Обработчик кнопки "Назад"
+        private async void OnBackToModeClicked(object sender, EventArgs e)
+        {
+            ChildPanel.IsVisible = false;
+            ParentPanel.IsVisible = false;
+            await ShowModePanelAsync();
+        }
+
+
 
 
 
