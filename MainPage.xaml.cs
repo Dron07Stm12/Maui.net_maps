@@ -58,10 +58,9 @@ namespace MauiGpsDemo
         // ======= АНДРЕЙ МЕНЯЙ ЗДЕСЬ! КОНЕЦ =======
 
         //////////////////////////////////////////////////////
-        /// <summary>
-        /// 
+        
          private bool isModePanelExpanded = false;
-        /// </summary>
+      
 
 
         public MainPage()
@@ -93,57 +92,7 @@ namespace MauiGpsDemo
 
 
 
-        /// ////////////////////////////////////////////////////////////////////
-        // ДОБАВИТЬ метод авторизации в класс MainPage:
-        //private async void OnLoginClicked(object sender, EventArgs e)
-        //{
-
-
-
-        //    AuthStatusLabel.Text = ""; // сброс ошибки
-        //    string email = EmailEntry.Text?.Trim();
-        //    string password = PasswordEntry.Text;
-
-        //    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-        //    {
-        //        AuthStatusLabel.Text = "Введите email и пароль.";
-        //        return;
-        //    }
-
-        //    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-        //    try
-        //    {
-        //        var auth = await authProvider.SignInWithEmailAndPasswordAsync(email, password);
-        //        firebaseToken = auth.FirebaseToken;
-        //        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
-        //        {
-        //            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
-        //        });
-
-        //        AuthStatusLabel.TextColor = Colors.Green;
-        //        AuthStatusLabel.Text = "Вход выполнен!";
-        //        AuthPanel.IsVisible = false; // скрыть форму после входа
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AuthStatusLabel.TextColor = Colors.Red;
-        //        AuthStatusLabel.Text = "Ошибка: " + ex.Message;
-        //    }
-        //}
-
-        ///////////////////////////////////////////////////////////////////////////////
-
-        // === ДОБАВЛЕН МЕТОД ДЛЯ ПОКАЗА/СКРЫТИЯ ВЫБОРА РЕЖИМА ===
-        private void SetModesVisible(bool visible)
-        {
-            ChooseModeLabel.IsVisible = visible;
-            ModeButtonsPanel.IsVisible = visible;
-            ChildPanel.IsVisible = false;
-            ParentPanel.IsVisible = false;
-        }
-
-        // === ДОБАВЬ МЕТОД РЕГИСТРАЦИИ ===
-        // === ДОБАВИТЬ/ИЗМЕНИТЬ методы регистрации и логина: ===
+   
 
         private async void OnRegisterClicked(object sender, EventArgs e)
         {
@@ -254,146 +203,11 @@ namespace MauiGpsDemo
             firebase = null;
             Preferences.Default.Clear();
         }
-        // ===
-
-
-        //private async void OnRegisterClicked(object sender, EventArgs e)
-        //{
-        //    AuthStatusLabel.Text = "";
-        //    string email = EmailEntry.Text?.Trim();
-        //    string password = PasswordEntry.Text;
-
-        //    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-        //    {
-        //        AuthStatusLabel.Text = "Введите email и пароль.";
-        //        return;
-        //    }
-
-        //    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-        //    try
-        //    {
-        //        var auth = await authProvider.CreateUserWithEmailAndPasswordAsync(email, password);
-        //        firebaseToken = auth.FirebaseToken;
-        //        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
-        //        {
-        //            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
-        //        });
-
-        //        AuthStatusLabel.TextColor = Colors.Green;
-        //        AuthStatusLabel.Text = "Регистрация успешна! Вход выполнен.";
-        //        AuthPanel.IsVisible = false;
-        //        SetModesVisible(true); // показать выбор режима
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AuthStatusLabel.TextColor = Colors.Red;
-        //        AuthStatusLabel.Text = "Ошибка регистрации: " + ex.Message;
-        //    }
-        //}
-
-        //// === ИЗМЕНИ МЕТОД АВТОРИЗАЦИИ ===
-        //private async void OnLoginClicked(object sender, EventArgs e)
-        //{
-        //    AuthStatusLabel.Text = ""; // сброс ошибки
-        //    string email = EmailEntry.Text?.Trim();
-        //    string password = PasswordEntry.Text;
-
-        //    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-        //    {
-        //        AuthStatusLabel.Text = "Введите email и пароль.";
-        //        return;
-        //    }
-
-        //    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-        //    try
-        //    {
-        //        var auth = await authProvider.SignInWithEmailAndPasswordAsync(email, password);
-        //        firebaseToken = auth.FirebaseToken;
-        //        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
-        //        {
-        //            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
-        //        });
-
-        //        AuthStatusLabel.TextColor = Colors.Green;
-        //        AuthStatusLabel.Text = "Вход выполнен!";
-        //        AuthPanel.IsVisible = false; // скрыть форму после входа
-        //        SetModesVisible(true); // показать выбор режима!
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AuthStatusLabel.TextColor = Colors.Red;
-        //        AuthStatusLabel.Text = "Ошибка: " + ex.Message;
-        //    }
-        //}
-
-
-        // === ДОБАВЬ этот метод в MainPage.cs: ===
-
-
+    
         /// Проверяет, не истёк ли токен. Если истёк — обновляет, если нет — ничего не делает.
         /// Вызывать перед использованием firebase!
 
-        //public static async Task EnsureFirebaseTokenAsync()
-        //{
-        //    // Если токена нет, или осталось меньше 2 минут — обновляем
-        //    if (string.IsNullOrEmpty(firebaseToken) ||
-        //        DateTime.UtcNow > firebaseTokenExpiryUtc.AddMinutes(-2))
-        //    {
-        //        if (!string.IsNullOrEmpty(_email) && !string.IsNullOrEmpty(_password))
-        //        {
-        //            var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-        //            _authLink = await authProvider.SignInWithEmailAndPasswordAsync(_email, _password);
-
-        //            firebaseToken = _authLink.FirebaseToken;
-        //            firebaseTokenExpiryUtc = _authLink.Created.AddSeconds(_authLink.ExpiresIn);
-        //            // Пересоздать firebase-клиент с новым токеном
-        //            firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
-        //            {
-        //                AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
-        //            });
-        //        }
-        //        // иначе — не можем обновить токен (нет данных для входа)
-        //    }
-        //}
-
-
-        //public static async Task EnsureFirebaseTokenAsync()
-        //{
-        //    if (string.IsNullOrEmpty(firebaseToken) ||
-        //        DateTime.UtcNow > firebaseTokenExpiryUtc.AddMinutes(-8))
-        //    {
-        //        System.Diagnostics.Debug.WriteLine($"[FIREBASE] Need refresh. Now: {DateTime.UtcNow}, Expiry: {firebaseTokenExpiryUtc}");
-        //        if (!string.IsNullOrEmpty(_email) && !string.IsNullOrEmpty(_password))
-        //        {
-        //            System.Diagnostics.Debug.WriteLine($"[FIREBASE] Refreshing token for {_email}");
-        //            try
-        //            {
-        //                var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-        //                _authLink = await authProvider.SignInWithEmailAndPasswordAsync(_email, _password);
-
-        //                firebaseToken = _authLink.FirebaseToken;
-        //                firebaseTokenExpiryUtc = _authLink.Created.AddSeconds(_authLink.ExpiresIn);
-        //                firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
-        //                {
-        //                    AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
-        //                });
-        //                System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token refreshed OK. Expires at {firebaseTokenExpiryUtc}");
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token refresh ERROR: {ex}");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            System.Diagnostics.Debug.WriteLine("[FIREBASE] Email/password not set, cannot refresh token!");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token still valid. Now: {DateTime.UtcNow}, Expires: {firebaseTokenExpiryUtc}");
-        //    }
-        //}
+       
 
         public static async Task EnsureFirebaseTokenAsync(bool force = false)
         {
@@ -464,37 +278,9 @@ namespace MauiGpsDemo
 
 
 
-        /// ////////////////////////////////////////////////
-
-        // === ДОБАВЛЕНО: обработчик изменения childId родителя ===
-        //        private void ParentIdEntry_TextChanged(object sender, TextChangedEventArgs e)
-        //        {
-        //            if (ParentPanel.IsVisible) // Только если панель родителя активна
-        //            {
-        //                var childId = ParentIdEntry.Text?.Trim() ?? "child1";
-        //#if ANDROID
-        //                StopParentLocationService();     // Остановить старый сервис
-        //                StartParentLocationService(childId); // Запустить новый сервис с новым childId
-        //#endif
-        //                // Перезапустить таймер (он всегда использует актуальный childId)
-        //                _parentUpdateTimer?.Stop();
-        //                _parentUpdateTimer = new System.Timers.Timer(5000);
-        //                _parentUpdateTimer.Elapsed += (s, e2) =>
-        //                {
-        //                    MainThread.BeginInvokeOnMainThread(() => UpdateParentFromPreferences(childId));
-        //                };
-        //                _parentUpdateTimer.AutoReset = true;
-        //                _parentUpdateTimer.Start();
-        //                UpdateParentFromPreferences(childId); // сразу обновить
-        //            }
-        //        }
-
-        /////////////////////////////////////////////////////
 
 
 
-        //
-        /// <summary>
         ///  Метод-обработчик, вызывается каждый раз, когда изменяется текстовое поле ParentIdEntry (то есть пользователь меняет ID ребёнка в режиме родителя).
 
         private void ParentIdEntry_TextChanged(object sender, TextChangedEventArgs e)                                                                             
@@ -559,19 +345,7 @@ namespace MauiGpsDemo
         }
 
 
-        //private void OnChildModeClicked(object sender, EventArgs e)
-        //{
-            
-        //    ShowPanels("child");
-        //    _ = RequestLocationAndStartServiceAsync();
-        //}
-
-        //private void OnParentModeClicked(object sender, EventArgs e)
-        //{
-            
-        //    ShowPanels("parent");
-        //    StopChildLocationService();
-        //}
+       
 
         private async void OnParentModeClicked(object sender, EventArgs e)
         {
@@ -701,33 +475,6 @@ namespace MauiGpsDemo
         }
 
 
-        //private void OnTrackChildClicked(object sender, EventArgs e)
-        //{
-        //    var childId = ParentIdEntry.Text?.Trim() ?? "child1";
-        //    UpdateParentFromPreferences(childId);
-        //}
-
-        // === ДОБАВЛЕНО: обновление карты родителя из Preferences ===
-
-        // === ИЗМЕНЕНО: OnTrackChildClicked теперь тоже перезапускает сервис и таймер ===
-//        private void OnTrackChildClicked(object sender, EventArgs e)
-//        {
-//            var childId = ParentIdEntry.Text?.Trim() ?? "child1";
-//#if ANDROID
-//            StopParentLocationService();
-//            StartParentLocationService(childId);
-//#endif
-//            // Перезапустить таймер (повторяет логику из TextChanged для надёжности)
-//            _parentUpdateTimer?.Stop();
-//            _parentUpdateTimer = new System.Timers.Timer(10000);
-//            _parentUpdateTimer.Elapsed += (s, e2) =>
-//            {
-//                MainThread.BeginInvokeOnMainThread(() => UpdateParentFromPreferences(childId));
-//            };
-//            _parentUpdateTimer.AutoReset = true;
-//            _parentUpdateTimer.Start();
-//            UpdateParentFromPreferences(childId);
-//        }
 
         private async void UpdateParentFromPreferences(string childId)
         {
@@ -756,17 +503,62 @@ namespace MauiGpsDemo
 
             MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMeters(200)));
 
+            //if (!isTrailShown)
+            //{
+            //    MyMap.Pins.Clear();
+            //    MyMap.Pins.Add(new Pin
+            //    {
+            //        Label = $"Ребёнок: {childId}",
+            //        Location = position,
+            //        Type = PinType.Place,
+            //        //Icon = ImageSource.FromFile("child_icon.png") // <--- вот тут добавили иконку
+            //    });
+            //}
+            //////////////////////////
+            ///
             if (!isTrailShown)
             {
                 MyMap.Pins.Clear();
+                MyMap.MapElements.Clear(); // ОЧИСТИТЬ старые линии!
                 MyMap.Pins.Add(new Pin
                 {
                     Label = $"Ребёнок: {childId}",
                     Location = position,
                     Type = PinType.Place,
-                    //Icon = ImageSource.FromFile("child_icon.png") // <--- вот тут добавили иконку
                 });
             }
+            else
+            {
+                MyMap.Pins.Clear();
+                MyMap.MapElements.Clear();
+
+                // Добавить линию маршрута
+                if (childLocations.Count > 1)
+                {
+                    _childPolyline = new Polyline
+                    {
+                        StrokeColor = Colors.Green,
+                        StrokeWidth = 5,
+                    };
+                    foreach (var pos in childLocations)
+                        _childPolyline.Geopath.Add(pos);
+
+                    MyMap.MapElements.Add(_childPolyline);
+                }
+                // Пин только на последней точке
+                if (childLocations.Count > 0)
+                {
+                    MyMap.Pins.Add(new Pin
+                    {
+                        Label = "Ребёнок",
+                        Location = childLocations.Last(),
+                        Type = PinType.Place,
+                    });
+                }
+            }
+
+
+            /////////////////////////
 
             // Преобразуем время из UTC в локальное:
             string localTimeStr = time;
@@ -884,64 +676,20 @@ namespace MauiGpsDemo
 
 
         /// ////////////////////////////////////////////////////////////////////////////
+        /// 
         private void OnShowPointsClicked(object sender, EventArgs e)
         {
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                if (!isTrailShown)
-                {
-                    MyMap.Pins.Clear();
-                    MyMap.MapElements.Clear(); // ОЧИСТИТЬ старые линии!
-
-                    // --- ДОБАВИТЬ ЛИНИЮ МАРШРУТА ---
-                    if (childLocations.Count > 1)
-                    {
-                        _childPolyline = new Polyline
-                        {
-                            StrokeColor = Colors.Green,
-                            StrokeWidth = 5,
-                        };
-                        foreach (var pos in childLocations)
-                            _childPolyline.Geopath.Add(pos);
-
-                        MyMap.MapElements.Add(_childPolyline);
-                    }
-
-                    // Добавить пин только на последнюю точку (текущую позицию ребёнка)
-                    if (childLocations.Count > 0)
-                    {
-                        MyMap.Pins.Add(new Pin
-                        {
-                            Label = $"Ребёнок",
-                            Location = childLocations.Last(),
-                            Type = PinType.Place,
-                        });
-                        MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(childLocations.Last(), Distance.FromMeters(200)));
-                    }
-
-                    isTrailShown = true;
-                    ((Button)sender).Text = "Скрыть след";
-                }
-                else
-                {
-                    MyMap.Pins.Clear();
-                    MyMap.MapElements.Clear(); // Удалить линию
-
-                    // Оставить только текущий пин
-                    if (childLocations.Count > 0)
-                    {
-                        MyMap.Pins.Add(new Pin
-                        {
-                            Label = $"Ребёнок",
-                            Location = childLocations.Last(),
-                            Type = PinType.Place,
-                        });
-                    }
-                    isTrailShown = false;
-                    ((Button)sender).Text = "След";
-                }
-            });
+            isTrailShown = !isTrailShown;
+            UpdateParentFromPreferences(ParentIdEntry.Text?.Trim() ?? "child1");
+            ((Button)sender).Text = isTrailShown ? "Скрыть след" : "След";
         }
+
+       
+        /// ////////////////
+       
+
+
+
 
 
         ////////////////////////////////////////////////////////////////
@@ -966,12 +714,32 @@ namespace MauiGpsDemo
             await ShowModePanelAsync();
         }
 
+        ///////////////////////
+        private void OnLanguageClicked(object sender, EventArgs e)
+        {
+            DisplayAlert("Язык", "Выберите язык (эта функция пока не реализована)", "OK");
+        }
 
+        private void OnPrivacyClicked(object sender, EventArgs e)
+        {
+            DisplayAlert("Конфиденциальность", "Здесь может быть ваша политика конфиденциальности.", "OK");
+        }
+
+
+        private async void ApplicationClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync("aboutpage");
+        }
 
 
 
     }
 }
+
+
+
+
+
 
 
 ///////////
@@ -1583,6 +1351,315 @@ namespace MauiGpsDemo
 //        else
 //        {
 //            MyMap.Pins.Clear();
+//            if (childLocations.Count > 0)
+//            {
+//                MyMap.Pins.Add(new Pin
+//                {
+//                    Label = $"Ребёнок",
+//                    Location = childLocations.Last(),
+//                    Type = PinType.Place,
+//                });
+//            }
+//            isTrailShown = false;
+//            ((Button)sender).Text = "След";
+//        }
+//    });
+//}
+
+
+
+
+
+
+
+// ////////////////////////////////////////////////////////////////////
+// ДОБАВИТЬ метод авторизации в класс MainPage:
+//private async void OnLoginClicked(object sender, EventArgs e)
+//{
+
+
+
+//    AuthStatusLabel.Text = ""; // сброс ошибки
+//    string email = EmailEntry.Text?.Trim();
+//    string password = PasswordEntry.Text;
+
+//    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+//    {
+//        AuthStatusLabel.Text = "Введите email и пароль.";
+//        return;
+//    }
+
+//    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+//    try
+//    {
+//        var auth = await authProvider.SignInWithEmailAndPasswordAsync(email, password);
+//        firebaseToken = auth.FirebaseToken;
+//        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+//        {
+//            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+//        });
+
+//        AuthStatusLabel.TextColor = Colors.Green;
+//        AuthStatusLabel.Text = "Вход выполнен!";
+//        AuthPanel.IsVisible = false; // скрыть форму после входа
+//    }
+//    catch (Exception ex)
+//    {
+//        AuthStatusLabel.TextColor = Colors.Red;
+//        AuthStatusLabel.Text = "Ошибка: " + ex.Message;
+//    }
+//}
+
+///////////////////////////////////////////////////////////////////////////////
+
+// === ДОБАВЛЕН МЕТОД ДЛЯ ПОКАЗА/СКРЫТИЯ ВЫБОРА РЕЖИМА ===
+//private void SetModesVisible(bool visible)
+//{
+//    ChooseModeLabel.IsVisible = visible;
+//    ModeButtonsPanel.IsVisible = visible;
+//    ChildPanel.IsVisible = false;
+//    ParentPanel.IsVisible = false;
+//}
+
+
+
+
+
+
+//public static async Task EnsureFirebaseTokenAsync()
+//{
+//    // Если токена нет, или осталось меньше 2 минут — обновляем
+//    if (string.IsNullOrEmpty(firebaseToken) ||
+//        DateTime.UtcNow > firebaseTokenExpiryUtc.AddMinutes(-2))
+//    {
+//        if (!string.IsNullOrEmpty(_email) && !string.IsNullOrEmpty(_password))
+//        {
+//            var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+//            _authLink = await authProvider.SignInWithEmailAndPasswordAsync(_email, _password);
+
+//            firebaseToken = _authLink.FirebaseToken;
+//            firebaseTokenExpiryUtc = _authLink.Created.AddSeconds(_authLink.ExpiresIn);
+//            // Пересоздать firebase-клиент с новым токеном
+//            firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+//            {
+//                AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+//            });
+//        }
+//        // иначе — не можем обновить токен (нет данных для входа)
+//    }
+//}
+
+
+//public static async Task EnsureFirebaseTokenAsync()
+//{
+//    if (string.IsNullOrEmpty(firebaseToken) ||
+//        DateTime.UtcNow > firebaseTokenExpiryUtc.AddMinutes(-8))
+//    {
+//        System.Diagnostics.Debug.WriteLine($"[FIREBASE] Need refresh. Now: {DateTime.UtcNow}, Expiry: {firebaseTokenExpiryUtc}");
+//        if (!string.IsNullOrEmpty(_email) && !string.IsNullOrEmpty(_password))
+//        {
+//            System.Diagnostics.Debug.WriteLine($"[FIREBASE] Refreshing token for {_email}");
+//            try
+//            {
+//                var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+//                _authLink = await authProvider.SignInWithEmailAndPasswordAsync(_email, _password);
+
+//                firebaseToken = _authLink.FirebaseToken;
+//                firebaseTokenExpiryUtc = _authLink.Created.AddSeconds(_authLink.ExpiresIn);
+//                firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+//                {
+//                    AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+//                });
+//                System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token refreshed OK. Expires at {firebaseTokenExpiryUtc}");
+//            }
+//            catch (Exception ex)
+//            {
+//                System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token refresh ERROR: {ex}");
+//            }
+//        }
+//        else
+//        {
+//            System.Diagnostics.Debug.WriteLine("[FIREBASE] Email/password not set, cannot refresh token!");
+//        }
+//    }
+//    else
+//    {
+//        System.Diagnostics.Debug.WriteLine($"[FIREBASE] Token still valid. Now: {DateTime.UtcNow}, Expires: {firebaseTokenExpiryUtc}");
+//    }
+//}
+
+
+
+//private void OnChildModeClicked(object sender, EventArgs e)
+//{
+
+//    ShowPanels("child");
+//    _ = RequestLocationAndStartServiceAsync();
+//}
+
+//private void OnParentModeClicked(object sender, EventArgs e)
+//{
+
+//    ShowPanels("parent");
+//    StopChildLocationService();
+//}
+
+
+
+// ===
+
+
+//private async void OnRegisterClicked(object sender, EventArgs e)
+//{
+//    AuthStatusLabel.Text = "";
+//    string email = EmailEntry.Text?.Trim();
+//    string password = PasswordEntry.Text;
+
+//    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+//    {
+//        AuthStatusLabel.Text = "Введите email и пароль.";
+//        return;
+//    }
+
+//    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+//    try
+//    {
+//        var auth = await authProvider.CreateUserWithEmailAndPasswordAsync(email, password);
+//        firebaseToken = auth.FirebaseToken;
+//        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+//        {
+//            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+//        });
+
+//        AuthStatusLabel.TextColor = Colors.Green;
+//        AuthStatusLabel.Text = "Регистрация успешна! Вход выполнен.";
+//        AuthPanel.IsVisible = false;
+//        SetModesVisible(true); // показать выбор режима
+//    }
+//    catch (Exception ex)
+//    {
+//        AuthStatusLabel.TextColor = Colors.Red;
+//        AuthStatusLabel.Text = "Ошибка регистрации: " + ex.Message;
+//    }
+//}
+
+//// === ИЗМЕНИ МЕТОД АВТОРИЗАЦИИ ===
+//private async void OnLoginClicked(object sender, EventArgs e)
+//{
+//    AuthStatusLabel.Text = ""; // сброс ошибки
+//    string email = EmailEntry.Text?.Trim();
+//    string password = PasswordEntry.Text;
+
+//    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+//    {
+//        AuthStatusLabel.Text = "Введите email и пароль.";
+//        return;
+//    }
+
+//    var authProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+//    try
+//    {
+//        var auth = await authProvider.SignInWithEmailAndPasswordAsync(email, password);
+//        firebaseToken = auth.FirebaseToken;
+//        firebase = new FirebaseClient(firebaseUrl, new FirebaseOptions
+//        {
+//            AuthTokenAsyncFactory = () => Task.FromResult(firebaseToken)
+//        });
+
+//        AuthStatusLabel.TextColor = Colors.Green;
+//        AuthStatusLabel.Text = "Вход выполнен!";
+//        AuthPanel.IsVisible = false; // скрыть форму после входа
+//        SetModesVisible(true); // показать выбор режима!
+//    }
+//    catch (Exception ex)
+//    {
+//        AuthStatusLabel.TextColor = Colors.Red;
+//        AuthStatusLabel.Text = "Ошибка: " + ex.Message;
+//    }
+//}
+
+
+// === ДОБАВЬ этот метод в MainPage.cs: ===
+
+
+
+
+//private void OnTrackChildClicked(object sender, EventArgs e)
+//{
+//    var childId = ParentIdEntry.Text?.Trim() ?? "child1";
+//    UpdateParentFromPreferences(childId);
+//}
+
+// === ДОБАВЛЕНО: обновление карты родителя из Preferences ===
+
+// === ИЗМЕНЕНО: OnTrackChildClicked теперь тоже перезапускает сервис и таймер ===
+//        private void OnTrackChildClicked(object sender, EventArgs e)
+//        {
+//            var childId = ParentIdEntry.Text?.Trim() ?? "child1";
+//#if ANDROID
+//            StopParentLocationService();
+//            StartParentLocationService(childId);
+//#endif
+//            // Перезапустить таймер (повторяет логику из TextChanged для надёжности)
+//            _parentUpdateTimer?.Stop();
+//            _parentUpdateTimer = new System.Timers.Timer(10000);
+//            _parentUpdateTimer.Elapsed += (s, e2) =>
+//            {
+//                MainThread.BeginInvokeOnMainThread(() => UpdateParentFromPreferences(childId));
+//            };
+//            _parentUpdateTimer.AutoReset = true;
+//            _parentUpdateTimer.Start();
+//            UpdateParentFromPreferences(childId);
+//        }
+
+
+
+
+
+//private void OnShowPointsClicked(object sender, EventArgs e)
+//{
+//    MainThread.BeginInvokeOnMainThread(() =>
+//    {
+//        if (!isTrailShown)
+//        {
+//            MyMap.Pins.Clear();
+//            MyMap.MapElements.Clear(); // ОЧИСТИТЬ старые линии!
+
+//            // --- ДОБАВИТЬ ЛИНИЮ МАРШРУТА ---
+//            if (childLocations.Count > 1)
+//            {
+//                _childPolyline = new Polyline
+//                {
+//                    StrokeColor = Colors.Green,
+//                    StrokeWidth = 5,
+//                };
+//                foreach (var pos in childLocations)
+//                    _childPolyline.Geopath.Add(pos);
+
+//                MyMap.MapElements.Add(_childPolyline);
+//            }
+
+//            // Добавить пин только на последнюю точку (текущую позицию ребёнка)
+//            if (childLocations.Count > 0)
+//            {
+//                MyMap.Pins.Add(new Pin
+//                {
+//                    Label = $"Ребёнок",
+//                    Location = childLocations.Last(),
+//                    Type = PinType.Place,
+//                });
+//                MyMap.MoveToRegion(MapSpan.FromCenterAndRadius(childLocations.Last(), Distance.FromMeters(200)));
+//            }
+
+//            isTrailShown = true;
+//            ((Button)sender).Text = "Скрыть след";
+//        }
+//        else
+//        {
+//            MyMap.Pins.Clear();
+//            MyMap.MapElements.Clear(); // Удалить линию
+
+//            // Оставить только текущий пин
 //            if (childLocations.Count > 0)
 //            {
 //                MyMap.Pins.Add(new Pin

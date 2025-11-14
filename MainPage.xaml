@@ -12,7 +12,9 @@
     <Image Source="family.png"
                Aspect="AspectFill"
                IsEnabled="False"
-               Opacity="1" />
+               Opacity="1" 
+               BackgroundColor="#75879E"
+           />
 
 
 
@@ -20,24 +22,63 @@
         <VerticalStackLayout Padding="30,0" Spacing="25">
 
             <!-- Панель авторизации (теперь с кнопкой регистрации) -->
-            <StackLayout x:Name="AuthPanel" Spacing="10">
-                <Label Text="Авторизация" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,150,0,0"  />
-                <Entry x:Name="EmailEntry" Placeholder="Email"/>
-                <Entry x:Name="PasswordEntry" Placeholder="Пароль" IsPassword="True"/>
-                <Button Text="Войти" Clicked="OnLoginClicked" BackgroundColor="#151212" TextColor="White"/>
-                <!-- Добавить кнопку регистрации -->
-                <Button Text="Зарегистрироваться" Clicked="OnRegisterClicked" BackgroundColor="#2B1313" TextColor="White"/>
-                <Label x:Name="AuthStatusLabel" Text="" TextColor="Red" HorizontalOptions="Center"/>
-            </StackLayout>
+           
 
-            <!-- Скрываем выбор режима до авторизации -->
-            <!--<Label x:Name="ChooseModeLabel"
-                   Text="Выберите режим"
-                   FontSize="18"
-                   HorizontalOptions="Center"
-                   FontAttributes="Bold"
-                   Margin="0,100,0,0"
-                   IsVisible="False" />-->
+                <StackLayout x:Name="AuthPanel" Spacing="10">
+                    <Label Text="Авторизация" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,150,0,0"  />
+                    <Entry x:Name="EmailEntry" Placeholder="Email" TextColor="White"/>
+                    <Entry x:Name="PasswordEntry" Placeholder="Пароль" IsPassword="True" TextColor="White"/>
+                               
+                    <!-- ДОБАВЛЕНО: BoxView для увеличения отступа между полями ввода и кнопками -->
+                    <!-- Новые кнопки вверху -->
+                                <Button Text="Язык"
+                        Clicked="OnLanguageClicked"
+                       BackgroundColor="#183849"
+                        TextColor="White"
+                        WidthRequest="160"
+                        HeightRequest="40"
+                        HorizontalOptions="Center"
+                        Margin="0,100,0,0"/>
+                                <Button Text="Конфиденциальность"
+                        Clicked="OnPrivacyClicked"
+                       BackgroundColor="#183849"
+                        TextColor="White"
+                        WidthRequest="160"
+                        HeightRequest="40"
+                        HorizontalOptions="Center"
+                        Margin="0,1,0,0"/>
+
+                        <Button Text="Войти"
+                        Clicked="OnLoginClicked"
+                        BackgroundColor="#263B16"
+                        TextColor="White"
+                        WidthRequest="160"
+                        HeightRequest="40"
+                        HorizontalOptions="Center"
+                        Margin="0,1,0,0"/>
+                                <!-- Кнопка Зарегистрироваться, отступ чуть меньше -->
+                        <Button Text="Зарегистрироваться"
+                        Clicked="OnRegisterClicked"
+                        BackgroundColor="#2D0303"
+                        TextColor="White"
+                        WidthRequest="160"
+                        HeightRequest="40"
+                        HorizontalOptions="Center"
+                        Margin="0,1,0,0"/>
+                       <Label x:Name="AuthStatusLabel" Text="" TextColor="#671818" HorizontalOptions="Center"/>
+
+                        <Button Text="О приложении"
+                            Clicked="ApplicationClicked"
+                           BackgroundColor="#183849"
+                            TextColor="White"
+                            WidthRequest="160"
+                            HeightRequest="40"
+                            HorizontalOptions="Center"
+                            Margin="0,1,0,0"/>
+
+
+                </StackLayout>
+
 
 
             <!-- === АНДРЕЙ: добавлено, выбор режима + Выйти -->
@@ -83,27 +124,28 @@
 
 
                 <StackLayout x:Name="ChildPanel" IsVisible="False" Spacing="15"  Padding="0,100,0,0" >
-                <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#0C880C" />
-                <Label Text="Введите имя/код ребёнка:"/>
-                <Entry x:Name="ChildIdEntry" Placeholder="child1" Text="child1" />
-                <Label x:Name="ChildLocationLabel" Text="Ожидание отправки координат..." HorizontalOptions="Center"/>
+                <Label Text="Режим Ребёнка" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#0D4E0D" />
+                <Label Text="Введите имя/код ребёнка:" FontAttributes="Bold" TextColor="White"/>
+                <Entry x:Name="ChildIdEntry" Placeholder="child1" Text="child1" TextColor="White" />
+                <Label x:Name="ChildLocationLabel" Text="Ожидание отправки координат..." HorizontalOptions="Center" TextColor="White"/>
                 <Button Text="Получить координаты" Clicked="OnGetLocationClicked" HorizontalOptions="Center" BackgroundColor="#183849" TextColor="White"/>
-                <Button Text="Назад" Clicked="OnBackToModeClicked" BackgroundColor="#888" TextColor="White" HorizontalOptions="Center"/>
+                <Button Text="Назад" Clicked="OnBackToModeClicked" BackgroundColor="#3A3E42" TextColor="White" HorizontalOptions="Center"/>
                 </StackLayout>
 
                 <StackLayout x:Name="ParentPanel" IsVisible="False" Spacing="15" Padding="0,15,0,0"  >
                 <Label Text="Режим Родителя" FontAttributes="Bold" FontSize="22" HorizontalOptions="Center" TextColor="#1111C8"/>
-                <Entry x:Name="ParentIdEntry" Placeholder="child1" Text="child1"/>
+                    <Label Text="Введите имя/код ребёнка:" FontAttributes="Bold" TextColor="White"/>
+                    <Entry x:Name="ParentIdEntry" Placeholder="child1" Text="child1" TextColor="White"/>
                 <HorizontalStackLayout HorizontalOptions="Center">
                     <!--<Button Text="Ребенок" Clicked="OnTrackChildClicked" BackgroundColor="#411111" TextColor="White"/>-->
                     <Button Text="Режим карты" Clicked="OnSatelliteClicked" BackgroundColor="#4F4949" TextColor="White"/>
                     <Button Text="След" Clicked="OnShowPointsClicked" BackgroundColor="#411111" TextColor="White"/>
                 </HorizontalStackLayout>
                 <maps:Map x:Name="MyMap" HeightRequest="300" HorizontalOptions="Fill"/>
-                <Label x:Name="ParentLocationLabel" Text="Местоположение не получено." HorizontalOptions="Center"/>
+                <Label x:Name="ParentLocationLabel" Text="Местоположение не получено." HorizontalOptions="Center" TextColor="White"/>
                 <Label x:Name="ParentStreetLabel" Text="" FontSize="18" TextColor="#902323"  HorizontalOptions="Center" FontAttributes="Bold" />
                 <Label x:Name="ParentBatteryLabel" Text="Батарея: -" HorizontalOptions="Center" FontAttributes="Bold" FontSize="18" TextColor="#11A611"/>
-                <Button Text="Назад" Clicked="OnBackToModeClicked" BackgroundColor="#888" TextColor="White" HorizontalOptions="Center"/>
+                 <Button Text="Назад" Clicked="OnBackToModeClicked" BackgroundColor="#3A3E42" TextColor="White" HorizontalOptions="Center"/>
 
                 </StackLayout>
 
@@ -139,4 +181,30 @@
                         IsVisible="False">
      <Button Text="Ребёнок" Clicked="OnChildModeClicked" BackgroundColor="#32480D" TextColor="White" />
      <Button Text="Родитель" Clicked="OnParentModeClicked" BackgroundColor="#0C0C5B" TextColor="White" />
- </HorizontalStackLayout>-->  
+ </HorizontalStackLayout>-->
+
+
+
+<!--<StackLayout x:Name="AuthPanel" Spacing="10">
+     <Label Text="Авторизация" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,150,0,0"  />
+     <Entry x:Name="EmailEntry" Placeholder="Email"/>
+     <Entry x:Name="PasswordEntry" Placeholder="Пароль" IsPassword="True"/>
+     <Button Text="Войти" Clicked="OnLoginClicked" BackgroundColor="#151212" TextColor="White"/>
+     -->
+<!-- Добавить кнопку регистрации -->
+<!--
+     <Button Text="Зарегистрироваться" Clicked="OnRegisterClicked" BackgroundColor="#2B1313" TextColor="White"/>
+     <Label x:Name="AuthStatusLabel" Text="" TextColor="Red" HorizontalOptions="Center"/>
+ </StackLayout>-->
+
+
+
+
+<!-- Скрываем выбор режима до авторизации -->
+<!--<Label x:Name="ChooseModeLabel"
+                   Text="Выберите режим"
+                   FontSize="18"
+                   HorizontalOptions="Center"
+                   FontAttributes="Bold"
+                   Margin="0,100,0,0"
+                   IsVisible="False" />-->

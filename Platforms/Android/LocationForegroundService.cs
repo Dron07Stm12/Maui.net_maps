@@ -60,7 +60,13 @@ namespace MauiGpsDemo.Platforms.Android
                 {
                     Description = channelDescription
                 };
+                //NotificationManager — системный сервис Android, управляющий всеми уведомлениями приложения.
+                //Получаешь его через GetSystemService.
+
                 var notificationManager = (NotificationManager)GetSystemService(NotificationService);
+                //Этот метод сообщает системе Android: “Создай канал с такими параметрами”.
+                //Если канал уже существует с таким id — ничего не происходит, ошибки не будет.
+                //После этого канал появляется в настройках, и ты можешь использовать его для отправки уведомлений.
                 notificationManager.CreateNotificationChannel(channel);
             }
             //////////////////////////////////////////////////
